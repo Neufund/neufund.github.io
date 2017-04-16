@@ -63,12 +63,12 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 15);
+/******/ 	return __webpack_require__(__webpack_require__.s = 93);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 15:
+/***/ 93:
 /***/ (function(module, exports) {
 
 module.exports ={
@@ -83,7 +83,9 @@ module.exports ={
             customArgs:{
                 _from :"0x0000000000000000000000000000000000000000"
             },
-            enableCache:true
+            enableCache:false,
+            fromBlock:2607801,
+            toBlock:3517758
         } ,
         MelonPort:{
             address:'0x3BF541f87056D134E0109BE1Be92978b26Cb09e0',
@@ -92,8 +94,9 @@ module.exports ={
             args:{
                 tokens: 'amount',
             },
-            enableCache:true
-
+            enableCache:true,
+            fromBlock:3175204,
+            toBlock:3199427,
         },
         TAAS:{
             address:'0xE7775A6e9Bcf904eb39DA2b68c5efb4F9360e08C',
@@ -103,8 +106,10 @@ module.exports ={
                 tokens:'value',
                 sender: 'to'
             },
-            enableCache:true
-
+            enableCache:false,
+            fromBlock:	3399337,
+            toBlock:	3517648,
+            decimal:6
         },
         WeTrust:{
             address:'0xC2ccE1F4190d4451c63cf591678C807679c3d728',
@@ -112,7 +117,10 @@ module.exports ={
             event:'Deposit',
             args:{
                 tokens:'value'
-            }
+            },
+            enableCache:false,
+            fromBlock:		3264524,
+            toBlock:		3517587
         },
         TheDAO:{
             address:'0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413',
@@ -121,12 +129,17 @@ module.exports ={
             args:{
                 tokens:'_amount',
             },
-            enableCache:true
+            enableCache:false,
+            fromBlock:3501626,
+            toBlock:3517587
         }
-
     },
-    host:'localhost',
-    port:'8545'
+    host:'https://mainnet.infura.io/My9Aw8U1yEqmchLYRKXK',
+//    host:'http://localhost:8545',
+    port:'8545',
+    skipBlocks:1000,
+    defaultDecimal:18,
+    defaultEtherFactor:1000
 };
 
 /***/ })
