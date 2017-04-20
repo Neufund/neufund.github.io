@@ -70,54 +70,6 @@
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var global    = __webpack_require__(6)
-  , core      = __webpack_require__(42)
-  , hide      = __webpack_require__(26)
-  , redefine  = __webpack_require__(27)
-  , ctx       = __webpack_require__(43)
-  , PROTOTYPE = 'prototype';
-
-var $export = function(type, name, source){
-  var IS_FORCED = type & $export.F
-    , IS_GLOBAL = type & $export.G
-    , IS_STATIC = type & $export.S
-    , IS_PROTO  = type & $export.P
-    , IS_BIND   = type & $export.B
-    , target    = IS_GLOBAL ? global : IS_STATIC ? global[name] || (global[name] = {}) : (global[name] || {})[PROTOTYPE]
-    , exports   = IS_GLOBAL ? core : core[name] || (core[name] = {})
-    , expProto  = exports[PROTOTYPE] || (exports[PROTOTYPE] = {})
-    , key, own, out, exp;
-  if(IS_GLOBAL)source = name;
-  for(key in source){
-    // contains in native
-    own = !IS_FORCED && target && target[key] !== undefined;
-    // export native or passed
-    out = (own ? target : source)[key];
-    // bind timers to global for call from export context
-    exp = IS_BIND && own ? ctx(out, global) : IS_PROTO && typeof out == 'function' ? ctx(Function.call, out) : out;
-    // extend global
-    if(target)redefine(target, key, out, type & $export.U);
-    // export
-    if(exports[key] != out)hide(exports, key, exp);
-    if(IS_PROTO && expProto[key] != out)expProto[key] = out;
-  }
-};
-global.core = core;
-// type bitmap
-$export.F = 1;   // forced
-$export.G = 2;   // global
-$export.S = 4;   // static
-$export.P = 8;   // proto
-$export.B = 16;  // bind
-$export.W = 32;  // wrap
-$export.U = 64;  // safe
-$export.R = 128; // real proto method for `library` 
-module.exports = $export;
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
 /* WEBPACK VAR INJECTION */(function(module) {//! moment.js
 //! version : 2.18.1
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
@@ -4583,6 +4535,54 @@ return hooks;
 })));
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(116)(module)))
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var global    = __webpack_require__(6)
+  , core      = __webpack_require__(42)
+  , hide      = __webpack_require__(26)
+  , redefine  = __webpack_require__(27)
+  , ctx       = __webpack_require__(43)
+  , PROTOTYPE = 'prototype';
+
+var $export = function(type, name, source){
+  var IS_FORCED = type & $export.F
+    , IS_GLOBAL = type & $export.G
+    , IS_STATIC = type & $export.S
+    , IS_PROTO  = type & $export.P
+    , IS_BIND   = type & $export.B
+    , target    = IS_GLOBAL ? global : IS_STATIC ? global[name] || (global[name] = {}) : (global[name] || {})[PROTOTYPE]
+    , exports   = IS_GLOBAL ? core : core[name] || (core[name] = {})
+    , expProto  = exports[PROTOTYPE] || (exports[PROTOTYPE] = {})
+    , key, own, out, exp;
+  if(IS_GLOBAL)source = name;
+  for(key in source){
+    // contains in native
+    own = !IS_FORCED && target && target[key] !== undefined;
+    // export native or passed
+    out = (own ? target : source)[key];
+    // bind timers to global for call from export context
+    exp = IS_BIND && own ? ctx(out, global) : IS_PROTO && typeof out == 'function' ? ctx(Function.call, out) : out;
+    // extend global
+    if(target)redefine(target, key, out, type & $export.U);
+    // export
+    if(exports[key] != out)hide(exports, key, exp);
+    if(IS_PROTO && expProto[key] != out)expProto[key] = out;
+  }
+};
+global.core = core;
+// type bitmap
+$export.F = 1;   // forced
+$export.G = 2;   // global
+$export.S = 4;   // static
+$export.P = 8;   // proto
+$export.B = 16;  // bind
+$export.W = 32;  // wrap
+$export.U = 64;  // safe
+$export.R = 128; // real proto method for `library` 
+module.exports = $export;
 
 /***/ }),
 /* 2 */
@@ -19472,7 +19472,7 @@ __webpack_require__(42).inspectSource = function(it){
 /* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , fails   = __webpack_require__(7)
   , defined = __webpack_require__(35)
   , quot    = /"/g;
@@ -20579,7 +20579,7 @@ module.exports = function(TYPE, $create){
 /***/ (function(module, exports, __webpack_require__) {
 
 // most Object methods by ES6 should accept primitives
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , core    = __webpack_require__(42)
   , fails   = __webpack_require__(7);
 module.exports = function(KEY, exec){
@@ -20951,7 +20951,7 @@ module.exports = function(fn, that, length){
 /***/ (function(module, exports, __webpack_require__) {
 
 var Map     = __webpack_require__(189)
-  , $export = __webpack_require__(0)
+  , $export = __webpack_require__(1)
   , shared  = __webpack_require__(104)('metadata')
   , store   = shared.store || (shared.store = new (__webpack_require__(192)));
 
@@ -21012,7 +21012,7 @@ if(__webpack_require__(12)){
   var LIBRARY             = __webpack_require__(55)
     , global              = __webpack_require__(6)
     , fails               = __webpack_require__(7)
-    , $export             = __webpack_require__(0)
+    , $export             = __webpack_require__(1)
     , $typed              = __webpack_require__(105)
     , $buffer             = __webpack_require__(140)
     , ctx                 = __webpack_require__(43)
@@ -23654,7 +23654,7 @@ module.exports = function(it, tag, stat){
 /* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , defined = __webpack_require__(35)
   , fails   = __webpack_require__(7)
   , spaces  = __webpack_require__(138)
@@ -27730,15 +27730,17 @@ module.exports ={
             address :'0xa74476443119a942de498590fe1f2454d7d4ac0d' ,
             abi : [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"golemFactory","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_master","type":"address"}],"name":"setMigrationMaster","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_value","type":"uint256"}],"name":"migrate","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[],"name":"finalize","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[],"name":"refund","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"migrationMaster","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"tokenCreationCap","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_agent","type":"address"}],"name":"setMigrationAgent","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"migrationAgent","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"fundingEndBlock","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"totalMigrated","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"tokenCreationMin","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"funding","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"tokenCreationRate","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"fundingStartBlock","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[],"name":"create","outputs":[],"payable":true,"type":"function"},{"inputs":[{"name":"_golemFactory","type":"address"},{"name":"_migrationMaster","type":"address"},{"name":"_fundingStartBlock","type":"uint256"},{"name":"_fundingEndBlock","type":"uint256"}],"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"Migrate","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"Refund","type":"event"}],
             args:{
-                tokens : '_value'
+                tokens : '_value',
+                sender:'_to'
             },
             event: 'Transfer',
             customArgs:{
-                _from :"0x0000000000000000000000000000000000000000"
+                _from :"0x0000000000000000000000000000000000000000",
             },
-            enableCache:true,
-            fromBlock:2607801,
-            toBlock:3517758
+            enableCache:false,
+            fromBlock:2607800,
+            toBlock:3517758 ,
+            etherFactor:1000
         } ,
         MelonPort:{
             address:'0x3BF541f87056D134E0109BE1Be92978b26Cb09e0',
@@ -27746,10 +27748,13 @@ module.exports ={
             event: 'TokensBought',
             args:{
                 tokens: 'amount',
+                sender:'sender'
             },
-            enableCache:true,
+            enableCache:false,
             fromBlock:3175204,
             toBlock:3199427,
+            etherFactor:2.2
+
         },
         TAAS:{
             address:'0xE7775A6e9Bcf904eb39DA2b68c5efb4F9360e08C',
@@ -27759,21 +27764,24 @@ module.exports ={
                 tokens:'value',
                 sender: 'to'
             },
-            enableCache:true,
+            enableCache:false,
             fromBlock:	3399337,
             toBlock:	3517648,
-            decimal:6
+            decimal:6,
+            etherFactor:1000
         },
         WeTrust:{
             address:'0xC2ccE1F4190d4451c63cf591678C807679c3d728',
             abi:[{"constant":false,"inputs":[{"name":"_owner","type":"address"}],"name":"removeOwner","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"_addr","type":"address"}],"name":"isOwner","outputs":[{"name":"","type":"bool"}],"type":"function"},{"constant":true,"inputs":[],"name":"m_numOwners","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[],"name":"m_lastDay","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":true,"inputs":[],"name":"version","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[],"name":"resetSpentToday","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"m_spentToday","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"_owner","type":"address"}],"name":"addOwner","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"m_required","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[{"name":"_h","type":"bytes32"}],"name":"confirm","outputs":[{"name":"","type":"bool"}],"type":"function"},{"constant":false,"inputs":[{"name":"_newLimit","type":"uint256"}],"name":"setDailyLimit","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"},{"name":"_data","type":"bytes"}],"name":"execute","outputs":[{"name":"_r","type":"bytes32"}],"type":"function"},{"constant":false,"inputs":[{"name":"_operation","type":"bytes32"}],"name":"revoke","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"_newRequired","type":"uint256"}],"name":"changeRequirement","outputs":[],"type":"function"},{"constant":true,"inputs":[{"name":"_operation","type":"bytes32"},{"name":"_owner","type":"address"}],"name":"hasConfirmed","outputs":[{"name":"","type":"bool"}],"type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"}],"name":"kill","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"}],"name":"changeOwner","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"m_dailyLimit","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"inputs":[{"name":"_owners","type":"address[]"},{"name":"_required","type":"uint256"},{"name":"_daylimit","type":"uint256"}],"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"owner","type":"address"},{"indexed":false,"name":"operation","type":"bytes32"}],"name":"Confirmation","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"owner","type":"address"},{"indexed":false,"name":"operation","type":"bytes32"}],"name":"Revoke","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"oldOwner","type":"address"},{"indexed":false,"name":"newOwner","type":"address"}],"name":"OwnerChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"newOwner","type":"address"}],"name":"OwnerAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"oldOwner","type":"address"}],"name":"OwnerRemoved","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"newRequirement","type":"uint256"}],"name":"RequirementChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"from","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Deposit","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"owner","type":"address"},{"indexed":false,"name":"value","type":"uint256"},{"indexed":false,"name":"to","type":"address"},{"indexed":false,"name":"data","type":"bytes"}],"name":"SingleTransact","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"owner","type":"address"},{"indexed":false,"name":"operation","type":"bytes32"},{"indexed":false,"name":"value","type":"uint256"},{"indexed":false,"name":"to","type":"address"},{"indexed":false,"name":"data","type":"bytes"}],"name":"MultiTransact","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"operation","type":"bytes32"},{"indexed":false,"name":"initiator","type":"address"},{"indexed":false,"name":"value","type":"uint256"},{"indexed":false,"name":"to","type":"address"},{"indexed":false,"name":"data","type":"bytes"}],"name":"ConfirmationNeeded","type":"event"}],
             event:'Deposit',
             args:{
-                tokens:'value'
+                tokens:'value',
+                sender:'from'
             },
             enableCache:false,
             fromBlock:		3264524,
-            toBlock:		3517587
+            toBlock:		3517587,
+            etherFactor:1000
         },
         TheDAO:{
             address:'0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413',
@@ -27781,18 +27789,21 @@ module.exports ={
             event:'Transfer',
             args:{
                 tokens:'_amount',
+                sender:'_from'
             },
             enableCache:false,
-            fromBlock:3501626,
-            toBlock:3517587
+            fromBlock:1429008,
+            toBlock:3564002,
+            etherFactor:1000
         }
     },
     host:'https://mainnet.infura.io/My9Aw8U1yEqmchLYRKXK',
 //    host:'http://localhost:8545',
-    port:'8545',
-    skipBlocks:1000,
+    skipBlocks:100000,
+    skipBlocksOnExceptions:10000,
     defaultDecimal:18,
-    defaultEtherFactor:1000
+    defaultEtherFactor:1000,
+    supportedCurrencies:['BTC','EUR','USD']
 };
 
 /***/ }),
@@ -27838,7 +27849,7 @@ module.exports = function(IS_INCLUDES){
 "use strict";
 
 var global            = __webpack_require__(6)
-  , $export           = __webpack_require__(0)
+  , $export           = __webpack_require__(1)
   , redefine          = __webpack_require__(27)
   , redefineAll       = __webpack_require__(59)
   , meta              = __webpack_require__(48)
@@ -29687,7 +29698,7 @@ module.exports = function(Constructor, NAME, next){
 "use strict";
 
 var LIBRARY        = __webpack_require__(55)
-  , $export        = __webpack_require__(0)
+  , $export        = __webpack_require__(1)
   , redefine       = __webpack_require__(27)
   , hide           = __webpack_require__(26)
   , has            = __webpack_require__(24)
@@ -35659,7 +35670,7 @@ class CacheAdapter {
     save(...record){
         const key = this.ico.name;
         const icoData = this.get();
-        console.log(icoData);
+//        console.log(icoData);
         icoData.data.push(this.ico.toJson(record[0] , record[1])); // save result , transaction
         icoData.lastBlockNumber = record[1].blockNumber;
 
@@ -35674,6 +35685,10 @@ class CacheAdapter {
             data.data = [];
         }
         return data;
+    }
+    static getBlock(){
+        let blockTimes = localStorage.getItem('blockTimes');
+        return blockTimes?JSON.parse(blockTimes):{};
     }
 }
 
@@ -52675,7 +52690,7 @@ utils.encode = function encode(arr, enc) {
 //! author : Werner Mollentze : https://github.com/wernerm
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -52753,7 +52768,7 @@ return af;
 //! author : Noureddine LOUAHEDJ : https://github.com/noureddineme
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -52817,7 +52832,7 @@ return arDz;
 //! author : Nusret Parlak: https://github.com/nusretparlak
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -52881,7 +52896,7 @@ return arKw;
 //! author : Ali Hmer: https://github.com/kikoanis
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -53013,7 +53028,7 @@ return arLy;
 //! author : Abdel Said : https://github.com/abdelsaid
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -53077,7 +53092,7 @@ return arMa;
 //! author : Suhail Alkowaileet : https://github.com/xsoh
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -53187,7 +53202,7 @@ return arSa;
 //! author : Nader Toukabri : https://github.com/naderio
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -53253,7 +53268,7 @@ return arTn;
 //! author : forabi https://github.com/forabi
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -53398,7 +53413,7 @@ return ar;
 //! author : topchiyev : https://github.com/topchiyev
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -53510,7 +53525,7 @@ return az;
 //! Author : Menelion Elensúle : https://github.com/Oire
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -53647,7 +53662,7 @@ return be;
 //! author : Krasen Borisov : https://github.com/kraz
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -53742,7 +53757,7 @@ return bg;
 //! author : Kaushik Gandhi : https://github.com/kaushikgandhi
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -53866,7 +53881,7 @@ return bn;
 //! author : Thupten N. Chakrishar : https://github.com/vajradog
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -53990,7 +54005,7 @@ return bo;
 //! author : Jean-Baptiste Le Duigou : https://github.com/jbleduigou
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -54104,7 +54119,7 @@ return br;
 //! based on (hr) translation by Bojan Marković
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -54251,7 +54266,7 @@ return bs;
 //! author : Juan G. Hurtado : https://github.com/juanghurtado
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -54344,7 +54359,7 @@ return ca;
 //! author : petrbela : https://github.com/petrbela
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -54521,7 +54536,7 @@ return cs;
 //! author : Anatoly Mironov : https://github.com/mirontoli
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -54590,7 +54605,7 @@ return cv;
 //! author : https://github.com/ryangreaves
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -54675,7 +54690,7 @@ return cy;
 //! author : Ulrik Nielsen : https://github.com/mrbase
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -54743,7 +54758,7 @@ return da;
 //! author : Mikolaj Dadela : https://github.com/mik01aj
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -54824,7 +54839,7 @@ return deAt;
 //! author : sschueller : https://github.com/sschueller
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -54909,7 +54924,7 @@ return deCh;
 //! author : Mikolaj Dadela : https://github.com/mik01aj
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -54990,7 +55005,7 @@ return de;
 //! author : Jawish Hameed : https://github.com/jawish
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -55095,7 +55110,7 @@ return dv;
 //! author : Aggelos Karalias : https://github.com/mehiel
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -55200,7 +55215,7 @@ return el;
 //! author : Jared Morse : https://github.com/jarcoal
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -55272,7 +55287,7 @@ return enAu;
 //! author : Jonathan Abourbih : https://github.com/jonbca
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -55340,7 +55355,7 @@ return enCa;
 //! author : Chris Gedrim : https://github.com/chrisgedrim
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -55412,7 +55427,7 @@ return enGb;
 //! author : Chris Cartlidge : https://github.com/chriscartlidge
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -55484,7 +55499,7 @@ return enIe;
 //! author : Luke McGregor : https://github.com/lukemcgregor
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -55558,7 +55573,7 @@ return enNz;
 //! comment : miestasmia corrected the translation by colindean
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -55633,7 +55648,7 @@ return eo;
 //! locale : Spanish (Dominican Republic) [es-do]
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -55721,7 +55736,7 @@ return esDo;
 //! author : Julio Napurí : https://github.com/julionc
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -55810,7 +55825,7 @@ return es;
 //! improvements : Illimar Tambek : https://github.com/ragulka
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -55894,7 +55909,7 @@ return et;
 //! author : Eneko Illarramendi : https://github.com/eillarra
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -55965,7 +55980,7 @@ return eu;
 //! author : Ebrahim Byagowi : https://github.com/ebraminio
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -56077,7 +56092,7 @@ return fa;
 //! author : Tarmo Aidantausta : https://github.com/bleadof
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -56189,7 +56204,7 @@ return fi;
 //! author : Ragnar Johannesen : https://github.com/ragnar123
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -56254,7 +56269,7 @@ return fo;
 //! author : Jonathan Abourbih : https://github.com/jonbca
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -56333,7 +56348,7 @@ return frCa;
 //! author : Gaspard Bucher : https://github.com/gaspard
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -56416,7 +56431,7 @@ return frCh;
 //! author : John Fischer : https://github.com/jfroffice
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -56504,7 +56519,7 @@ return fr;
 //! author : Robin van der Vliet : https://github.com/robin0van0der0v
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -56584,7 +56599,7 @@ return fy;
 //! author : Jon Ashdown : https://github.com/jonashdown
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -56665,7 +56680,7 @@ return gd;
 //! author : Juan G. Hurtado : https://github.com/juanghurtado
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -56747,7 +56762,7 @@ return gl;
 //! author : The Discoverer : https://github.com/WikiDiscoverer
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -56876,7 +56891,7 @@ return gomLatn;
 //! author : Tal Ater : https://github.com/TalAter
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -56978,7 +56993,7 @@ return he;
 //! author : Mayank Singhal : https://github.com/mayanksinghal
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -57107,7 +57122,7 @@ return hi;
 //! author : Bojan Marković : https://github.com/bmarkovic
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -57257,7 +57272,7 @@ return hr;
 //! author : Adam Brunner : https://github.com/adambrunner
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -57371,7 +57386,7 @@ return hu;
 //! author : Armendarabyan : https://github.com/armendarabyan
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -57472,7 +57487,7 @@ return hyAm;
 //! reference: http://id.wikisource.org/wiki/Pedoman_Umum_Ejaan_Bahasa_Indonesia_yang_Disempurnakan
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -57559,7 +57574,7 @@ return id;
 //! author : Hinrik Örn Sigurðsson : https://github.com/hinrik
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -57692,7 +57707,7 @@ return is;
 //! author: Mattia Larentis: https://github.com/nostalgiaz
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -57766,7 +57781,7 @@ return it;
 //! author : LI Long : https://github.com/baryon
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -57852,7 +57867,7 @@ return ja;
 //! reference: http://jv.wikipedia.org/wiki/Basa_Jawa
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -57939,7 +57954,7 @@ return jv;
 //! author : Irakli Janiashvili : https://github.com/irakli-janiashvili
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -58033,7 +58048,7 @@ return ka;
 //! authors : Nurlan Rakhimzhanov : https://github.com/nurlan
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -58125,7 +58140,7 @@ return kk;
 //! author : Kruy Vanna : https://github.com/kruyvanna
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -58188,7 +58203,7 @@ return km;
 //! author : Rajeev Naik : https://github.com/rajeevnaikte
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -58320,7 +58335,7 @@ return kn;
 //! author : Jeeeyul Lee <jeeeyul@gmail.com>
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -58393,7 +58408,7 @@ return ko;
 //! author : Chyngyz Arystan uulu : https://github.com/chyngyz
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -58487,7 +58502,7 @@ return ky;
 //! author : David Raison : https://github.com/kwisatz
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -58628,7 +58643,7 @@ return lb;
 //! author : Ryan Hart : https://github.com/ryanhart2
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -58703,7 +58718,7 @@ return lo;
 //! author : Mindaugas Mozūras : https://github.com/mmozuras
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -58826,7 +58841,7 @@ return lt;
 //! author : Jānis Elmeris : https://github.com/JanisE
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -58927,7 +58942,7 @@ return lv;
 //! author : Miodrag Nikač <miodrag@restartit.me> : https://github.com/miodragnikac
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -59043,7 +59058,7 @@ return me;
 //! author : John Corrigan <robbiecloset@gmail.com> : https://github.com/johnideal
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -59112,7 +59127,7 @@ return mi;
 //! author : Borislav Mickov : https://github.com/B0k0
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -59207,7 +59222,7 @@ return mk;
 //! author : Floyd Pink : https://github.com/floydpink
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -59294,7 +59309,7 @@ return ml;
 //! author : Vivek Athalye : https://github.com/vnathalye
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -59458,7 +59473,7 @@ return mr;
 //! author : Weldan Jamili : https://github.com/weldan
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -59545,7 +59560,7 @@ return msMy;
 //! author : Weldan Jamili : https://github.com/weldan
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -59634,7 +59649,7 @@ return ms;
 //! author : Tin Aung Lin : https://github.com/thanyawzinmin
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -59734,7 +59749,7 @@ return my;
 //!           Sigurd Gartmann : https://github.com/sigurdga
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -59801,7 +59816,7 @@ return nb;
 //! author : suvash : https://github.com/suvash
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -59930,7 +59945,7 @@ return ne;
 //! author : Jacob Middag : https://github.com/middagj
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -60023,7 +60038,7 @@ return nlBe;
 //! author : Jacob Middag : https://github.com/middagj
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -60115,7 +60130,7 @@ return nl;
 //! author : https://github.com/mechuwind
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -60180,7 +60195,7 @@ return nn;
 //! author : Harpreet Singh : https://github.com/harpreetkhalsagtbit
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -60309,7 +60324,7 @@ return paIn;
 //! author : Rafal Hirsz : https://github.com/evoL
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -60421,7 +60436,7 @@ return pl;
 //! author : Caio Ribeiro Pereira : https://github.com/caio-ribeiro-pereira
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -60487,7 +60502,7 @@ return ptBr;
 //! author : Jefferson : https://github.com/jalex79
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -60558,7 +60573,7 @@ return pt;
 //! author : Valentin Agachi : https://github.com/avaly
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -60639,7 +60654,7 @@ return ro;
 //! author : Коренберг Марк : https://github.com/socketpair
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -60825,7 +60840,7 @@ return ru;
 //! author : Narain Sagar : https://github.com/narainsagar
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -60928,7 +60943,7 @@ return sd;
 //! authors : Bård Rolstad Henriksen : https://github.com/karamell
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -60994,7 +61009,7 @@ return se;
 //! author : Sampath Sitinamaluwa : https://github.com/sampathsris
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -61071,7 +61086,7 @@ return si;
 //! based on work of petrbela : https://github.com/petrbela
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -61225,7 +61240,7 @@ return sk;
 //! author : Robert Sedovšek : https://github.com/sedovsek
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -61394,7 +61409,7 @@ return sl;
 //! author : Oerd Cukalla : https://github.com/oerd
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -61467,7 +61482,7 @@ return sq;
 //! author : Milan Janačković<milanjanackovic@gmail.com> : https://github.com/milan-j
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -61582,7 +61597,7 @@ return srCyrl;
 //! author : Milan Janačković<milanjanackovic@gmail.com> : https://github.com/milan-j
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -61697,7 +61712,7 @@ return sr;
 //! author : Nicolai Davies<mail@nicolai.io> : https://github.com/nicolaidavies
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -61791,7 +61806,7 @@ return ss;
 //! author : Jens Alm : https://github.com/ulmus
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -61865,7 +61880,7 @@ return sv;
 //! author : Fahad Kassim : https://github.com/fadsel
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -61929,7 +61944,7 @@ return sw;
 //! author : Arjunkumar Krishnamoorthy : https://github.com/tk120404
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -62064,7 +62079,7 @@ return ta;
 //! author : Krishna Chaitanya Thota : https://github.com/kcthota
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -62159,7 +62174,7 @@ return te;
 //! author : Onorio De J. Afonso : https://github.com/marobo
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -62231,7 +62246,7 @@ return tet;
 //! author : Kridsada Thanabulpong : https://github.com/sirn
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -62303,7 +62318,7 @@ return th;
 //! author : Dan Hagman : https://github.com/hagmandan
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -62370,7 +62385,7 @@ return tlPh;
 //! author : Dominika Kruk : https://github.com/amaranthrose
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -62496,7 +62511,7 @@ return tlh;
 //!           Burak Yiğit Kaya: https://github.com/BYK
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -62591,7 +62606,7 @@ return tr;
 //! author : Iustì Canun
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -62686,7 +62701,7 @@ return tzl;
 //! author : Abdel Said : https://github.com/abdelsaid
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -62749,7 +62764,7 @@ return tzmLatn;
 //! author : Abdel Said : https://github.com/abdelsaid
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -62813,7 +62828,7 @@ return tzm;
 //! Author : Menelion Elensúle : https://github.com/Oire
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -62969,7 +62984,7 @@ return uk;
 //! author : Zack : https://github.com/ZackVision
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -63072,7 +63087,7 @@ return ur;
 //! author : Rasulbek Mirzayev : github.com/Rasulbeeek
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -63135,7 +63150,7 @@ return uzLatn;
 //! author : Sardor Muminov : https://github.com/muminoff
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -63198,7 +63213,7 @@ return uz;
 //! author : Bang Nguyen : https://github.com/bangnk
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -63282,7 +63297,7 @@ return vi;
 //! author : Andrew Hood : https://github.com/andrewhood125
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -63355,7 +63370,7 @@ return xPseudo;
 //! author : Atolagbe Abisoye : https://github.com/andela-batolagbe
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -63421,7 +63436,7 @@ return yo;
 //! author : Zeno Zeng : https://github.com/zenozeng
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -63538,7 +63553,7 @@ return zhCn;
 //! author : Konstantin : https://github.com/skfd
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -63647,7 +63662,7 @@ return zhHk;
 //! author : Chris Lam : https://github.com/hehachris
 
 ;(function (global, factory) {
-    true ? factory(__webpack_require__(1)) :
+    true ? factory(__webpack_require__(0)) :
    typeof define === 'function' && define.amd ? define(['../moment'], factory) :
    factory(global.moment)
 }(this, (function (moment) { 'use strict';
@@ -65757,7 +65772,7 @@ module.exports = Jsonrpc;
  * @draw: the function that draw the chart
  *
  */
-class ChartManeger{
+class ChartManager{
     constructor(){
         this.chartColors = {
             red: 'rgb(255, 99, 132)',
@@ -65851,7 +65866,7 @@ class ChartManeger{
 class Dom{
     constructor(){
 //        console.log("Dom start" , providers);
-        this.chart = new ChartManeger();
+        this.chart = new ChartManager();
     }
 
     append(...data){
@@ -65877,16 +65892,26 @@ class Dom{
     }
 
     chartButtonOnClick(ico){
-        let chart = new ChartManeger();
+        let chart = new ChartManager();
         __WEBPACK_IMPORTED_MODULE_1_jquery___default()('#charts').click(function() {
             __WEBPACK_IMPORTED_MODULE_1_jquery___default()('.charts').toggle();
-
             chart.draw(ico.chartData);
-            __WEBPACK_IMPORTED_MODULE_1_jquery___default()("#loader").hide();
-
         });
     }
-
+    content(id , text = null){
+        return text?__WEBPACK_IMPORTED_MODULE_1_jquery___default()(`#${id}`).html(text): __WEBPACK_IMPORTED_MODULE_1_jquery___default()(`#${id}`).html();
+    }
+    reset(icoName){
+        let date = new Date().toTimeString();
+        __WEBPACK_IMPORTED_MODULE_1_jquery___default()('td span').html("");
+        __WEBPACK_IMPORTED_MODULE_1_jquery___default()('#status').text(`${date} ${icoName} start scanning all blocks...`)
+    }
+    log(text){
+        let date = new Date().toTimeString();
+        let ico = __WEBPACK_IMPORTED_MODULE_1_jquery___default()('#smart-contract').val()
+        console.log(`${date} ${ico} ${text}`);
+        return __WEBPACK_IMPORTED_MODULE_1_jquery___default()('#status').prepend( `${date} ${ico} ${text}\n`);
+    }
 }
 
 /* harmony default export */ __webpack_exports__["a"] = (Dom);
@@ -65918,6 +65943,7 @@ class ICO{
     constructor(web3,address,  name , abi){
         this.name = name;
         this.web3 = web3;
+        this.address = address;
         this.smartContract = this.web3.eth.contract(abi).at(address);
         this.currentIco = providers[name];
         this.current = new __WEBPACK_IMPORTED_MODULE_0__CacheAdapter_js__["a" /* default */](this).get();
@@ -65935,15 +65961,19 @@ class ICO{
 
     }
     fetch(from  ,callback){
-        let self = this;
         const customArgs = this.currentIco.hasOwnProperty('customArgs')?this.currentIco.customArgs:{};
-
-        let startBlockNumber = 	from; // start from the last block number
         let amount = __WEBPACK_IMPORTED_MODULE_1__config_js___default.a.skipBlocks;
+        let configToBlock = this.currentIco.toBlock;
 
-        from = from + amount;
-        let items = [];
-        let event = eval(`this.smartContract.${this.currentIco.event}`)(customArgs,{fromBlock:from, toBlock: from+amount});
+//        let event = eval(`this.smartContract.${this.currentIco.event}`)(customArgs,{fromBlock:from, toBlock: from+amount,topics: ["LogTake"]} );
+        if(typeof from === "string") {
+            return;
+        };
+
+        let toBlock = configToBlock-from < 100000?'latest':from+amount;
+
+        let event = this.smartContract[this.currentIco.event](customArgs,{fromBlock:from, toBlock: toBlock} );
+//        let event = this.web3.eth.filter({fromBlock:0, toBlock: 'latest', address: this.address});
 
         event.get((error, results) => {
 
@@ -65952,7 +65982,7 @@ class ICO{
                 callback(error , null, null);
                 return;
             }
-            callback(null, results);
+            callback(null, results , toBlock);
         });
 
     }
@@ -65966,20 +65996,25 @@ class ICO{
         this.csvContent += items.join(",") + "\n";
     }
 
-    toJson(block , tx){
-        return {
-            'result': {
-                args:block.args,
-                address:block.address,
-                transactionHash:block.transactionHash
-            },
-            'tx': {
-                from:tx.from,
-                gas:tx.gas,
-                blockNumber:tx.blockNumber,
-                to:tx.to,
-                value:tx.value
-            }}
+    toJson(block , tx = null){
+        let d = {};
+        d['result'] = {
+            args:block.args,
+            address:block.address,
+            transactionHash:block.transactionHash
+        };
+
+        if(tx){
+            d['tx']= {
+                from: tx.from,
+                    gas:tx.gas,
+                    blockNumber:tx.blockNumber,
+                    to:tx.to,
+                    value:tx.value
+            }
+        }
+        return d;
+
     }
 }
 
@@ -67770,9 +67805,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__config_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__config_js__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_jquery__ = __webpack_require__(160);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_jquery__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ICO_js__ = __webpack_require__(338);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__DOM_js__ = __webpack_require__(337);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__CacheAdapter_js__ = __webpack_require__(159);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_moment__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_moment__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ICO_js__ = __webpack_require__(338);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__DOM_js__ = __webpack_require__(337);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__CacheAdapter_js__ = __webpack_require__(159);
+
 
 
 
@@ -67792,8 +67830,29 @@ const HookedWalletSubprovider = __webpack_require__(344)
 const NonceSubprovider = __webpack_require__(345)
 const RpcSubprovider = __webpack_require__(346)
 
+
 let engine = new ProviderEngine();
 let web3 = new __WEBPACK_IMPORTED_MODULE_1_web3___default.a(engine);
+
+let currencyPerEther= {};
+
+__WEBPACK_IMPORTED_MODULE_3_jquery___default.a.ajax({
+    url: 'https://api.coinbase.com/v2/exchange-rates?currency=ETH',
+    success: function(result){
+        console.log(result.data)
+        __WEBPACK_IMPORTED_MODULE_2__config_js___default.a.supportedCurrencies.map(function (currency) {
+            __WEBPACK_IMPORTED_MODULE_3_jquery___default()('#currency-selector').append(`<option value="${result.data.rates[currency]}">${currency}</option>`);
+        });
+        currencyPerEther = {name: 'EUR', value:result.data.rates['EUR']};
+        __WEBPACK_IMPORTED_MODULE_3_jquery___default()('#time').html(new Date());
+        __WEBPACK_IMPORTED_MODULE_3_jquery___default()('#ether_euro').html(currencyPerEther.value);
+
+        __WEBPACK_IMPORTED_MODULE_3_jquery___default()('.currency').each(function(){
+            __WEBPACK_IMPORTED_MODULE_3_jquery___default()(this).html(currencyPerEther.name);
+        });
+
+    }
+});
 
 // static results
 engine.addProvider(new FixtureSubprovider({
@@ -67844,6 +67903,75 @@ const makePromise = (func) => (...args) => new Promise((resolve, fail) =>
     func(...args, (error, result) => error ? fail(error) : resolve(result))
 );
 
+const memoize = func => {
+    const data = __WEBPACK_IMPORTED_MODULE_7__CacheAdapter_js__["a" /* default */].getBlock()
+    let map = data?data:{};
+    return (...args) =>
+        map[args] === undefined ? (map[args] = func(...args)) : map[args];
+};
+
+/**
+ * for statistcs
+ *
+ */
+let startDate = null;
+let etherTotal = 0;
+let euroTotal = 0;
+let tokenCreated = 0;
+let senders = {};
+let transactionsCount = 0;// cachedItems.length;
+let numberInvestorsMoreThanOne100kEuro = 0;
+let numberInvestorsBetween5to100kEruo= 0;
+let numberInvestorsLessThan500K= 0;
+let numberInvestorsWhoInvestedMoreThanOnce= 0;
+
+let maxInvestments= 0;
+let minInvestments= 99999999;
+/** end statiscs variables*/
+
+let dom = new __WEBPACK_IMPORTED_MODULE_6__DOM_js__["a" /* default */]();
+
+function refreshResults(){
+
+    maxInvestments= 0;
+    minInvestments= 99999999;
+    numberInvestorsMoreThanOne100kEuro = 0;
+    numberInvestorsBetween5to100kEruo= 0;
+    numberInvestorsLessThan500K= 0;
+    numberInvestorsWhoInvestedMoreThanOnce= 0;
+
+    dom.content('currency_raised_euro' ,`${etherTotal*currencyPerEther.value} ${currencyPerEther.name}` );
+
+    for (let [key, value] of Object.entries(senders)) {
+        let currencyValue = value['ethers']*currencyPerEther.value;
+
+        if(currencyValue > 100000)
+            numberInvestorsMoreThanOne100kEuro+=1;
+        if(currencyValue > 5000 && currencyValue <100000)
+            numberInvestorsBetween5to100kEruo+=1;
+        if(currencyValue < 5000)
+            numberInvestorsLessThan500K+=1;
+        if(value['times'] > 1)
+            numberInvestorsWhoInvestedMoreThanOnce +=1;
+
+        if(currencyValue > maxInvestments)
+            maxInvestments = `${currencyValue} ${currencyPerEther.name}  / ${value['ethers']} Ether`;
+
+        if(value['ethers'] < minInvestments)
+            minInvestments=value['ethers'];
+    }
+
+
+
+    dom.content('investors_gk100' ,`${numberInvestorsMoreThanOne100kEuro}` );
+    dom.content('investors_5100k' ,`${numberInvestorsBetween5to100kEruo}` );
+    dom.content('investors_l5k' ,`${numberInvestorsLessThan500K}` );
+    dom.content('investors_more_once' ,`${numberInvestorsWhoInvestedMoreThanOnce}` );
+    dom.content('max_investment' ,`${maxInvestments}` );
+    dom.content('min_investment' ,`${minInvestments}` );
+
+}
+
 
 /**
  * @init
@@ -67855,13 +67983,18 @@ function init(ICONAME){
 
     // Get ICO data from the config
     let icoConfig = providers[ICONAME];
-    let dom = new __WEBPACK_IMPORTED_MODULE_5__DOM_js__["a" /* default */]();
+
+    dom.reset(ICONAME);
+    __WEBPACK_IMPORTED_MODULE_3_jquery___default()('#time').html(new Date());
+    __WEBPACK_IMPORTED_MODULE_3_jquery___default()('#ether_euro').html(currencyPerEther.value);
 
     // ICO instance
-    let ico = new __WEBPACK_IMPORTED_MODULE_4__ICO_js__["a" /* default */](web3,icoConfig['address'] , ICONAME, icoConfig['abi']);
+    let ico = new __WEBPACK_IMPORTED_MODULE_5__ICO_js__["a" /* default */](web3,icoConfig['address'] , ICONAME, icoConfig['abi']);
 
     // cache instance
-    let cache = new __WEBPACK_IMPORTED_MODULE_6__CacheAdapter_js__["a" /* default */](ico);
+    let cache = new __WEBPACK_IMPORTED_MODULE_7__CacheAdapter_js__["a" /* default */](ico);
+
+    let storageData = [];
 
     /**
      * Start fetching the transactions and store them into the cache if that written in the config.js
@@ -67869,120 +68002,194 @@ function init(ICONAME){
      * - Make the chart more dynamic to exand the period by hours
      */
 
+    /**
+     * for statistcs
+     *
+     */
+    startDate = null;
+    etherTotal = 0;
+    euroTotal = 0;
+    tokenCreated = 0;
+    senders = {};
+    transactionsCount = 0;// cachedItems.length;
+
+    /** end statiscs variables*/
+
     let cachedData = cache.get();
     let cachedItems = cachedData['data'];
 
     let fromBlock = icoConfig.hasOwnProperty('fromBlock')?icoConfig['fromBlock']:0;
 
-    if (parseInt(cachedData.lastBlockNumber) > 0 ){
-        fromBlock = parseInt(cachedData.lastBlockNumber);
+    if (parseFloat(cachedData.lastBlockNumber) > 0 ){
+        fromBlock = parseFloat(cachedData.lastBlockNumber);
     }
 
     let toBlock = icoConfig.hasOwnProperty('toBlock')?icoConfig['toBlock']:999999;
-    let amount = __WEBPACK_IMPORTED_MODULE_2__config_js___default.a.skipBlocks;
 
-    async function getLastTransaction(results) {
-        return await makePromise(web3.eth.getTransaction)(results[results.length -1].transactionHash);
-    }
+    async function analyzeReadyResult(item){
+        let fastBlockTime = memoize(blockTime);
+        let txDate = await fastBlockTime(item.blockNumber);
 
+        let dates = __WEBPACK_IMPORTED_MODULE_7__CacheAdapter_js__["a" /* default */].getBlock() //JSON.parse(localStorage.getItem('blockTimes'));
+        dates[item.blockNumber] = txDate;
+        localStorage.setItem('blockTimes',JSON.stringify(dates));
 
-    async function analyzeReadyResult(item,tx ){
-        let result = ico.toJson(item, tx);
-
-        //console.log(result);
-        let etherValue = web3.fromWei(result.tx.value, "ether").valueOf();
-        let sender = typeof icoConfig.args.sender !== "undefined" ? result.result.args[icoConfig.args.sender] : result.tx.from;
+        if(typeof txDate === "string")
+            txDate = new Date(txDate);
 
 
+//        console.log(`Analyzing ${item.blockNumber}`);
+
+        let result = ico.toJson(item);
+        console.log(`Analyzing ${item.blockNumber}`);
         const factor = icoConfig.hasOwnProperty('decimal') ? 10 ** icoConfig['decimal'] : 10 ** __WEBPACK_IMPORTED_MODULE_2__config_js___default.a['defaultDecimal'];
         let tokenNumbers = result.result.args[icoConfig.args.tokens].valueOf() / factor;
 
-        if (parseInt(etherValue) === 0 && tokenNumbers !== 0) {
+        let etherValue = tokenNumbers/icoConfig['etherFactor']; //web3.fromWei(result.tx.value, "ether").valueOf();
+        let sender = result.result.args[icoConfig.args.sender];
+
+        if (parseFloat(etherValue) === 0 && tokenNumbers !== 0) {
             etherValue = tokenNumbers / __WEBPACK_IMPORTED_MODULE_2__config_js___default.a['defaultEtherFactor'];
         }
 
+        if(typeof senders[sender] === "undefined")
+            senders[sender] =  {tokens:0 , ethers:0 , euro:0 , times:0};
+
+        senders[sender]['ethers'] += parseFloat(etherValue);
+        senders[sender]['tokens'] += parseFloat(tokenNumbers);
+        senders[sender]['times'] += 1;
+        
         // append the csv variable that define at the top by its values
         ico.appendToCSV(sender, etherValue, tokenNumbers);
 
-        web3.eth.getBlock(tx.blockNumber , function (err, block) {
-            if(err ) return;
-            //convert timestamp into date
-            let txDate = new Date(block.timestamp * 1000);
+
+        etherTotal += parseFloat(etherValue);
+        tokenCreated += parseFloat(tokenNumbers);
 
 
-            // get date with format d/m/y to be the uniqe key for the charts
-            let currentDate = (txDate.getDate() + '/' + (txDate.getMonth() + 1) + '/' + txDate.getFullYear());
-            if (typeof ico.chartData[currentDate] === "undefined") {
-                ico.chartData[currentDate] = 0;
-            }
-            ico.chartData[currentDate] += 1;
-            dom.append(txDate, sender, etherValue, tokenNumbers);
-        });
+        // get date with format d/m/y to be the uniqe key for the charts
+        let currentDate = (txDate.getDate() + '/' + (txDate.getMonth() + 1) + '/' + txDate.getFullYear());
+        if (typeof ico.chartData[currentDate] === "undefined") {
+            ico.chartData[currentDate] = 0;
+        }
+        ico.chartData[currentDate] += 1;
 
+        /*
+         * @Statistics: date for ico starts
+         */
+        if(!dom.content('ico_starts')){
+            startDate = txDate;
+            dom.content('ico_starts' ,txDate );
+        }
+        //dom.append(txDate, sender, etherValue, tokenNumbers);
+        return txDate;
     }
+
+    async function blockTime(blockNumber) {
+        let result = await makePromise(web3.eth.getBlock)(blockNumber);
+        console.log(`Caching this timestamp form block number blockNumber ${blockNumber}`);
+        dom.log(`Fetching ${blockNumber} timestamp`);
+        return new Date(result.timestamp * 1000);
+    }
+
 
     async function analyzeResults(results) {
-        results.map((item)=> {
+        let txDate = null;
+        for ( let i = 0,j=results.length-1; i < results.length/2 ; i++ , j--){
+            let item = results[i];
 
-            web3.eth.getTransaction(item.transactionHash , function (err, tx) {
-                if(err) return;
+            txDate = await analyzeReadyResult(item);
 
-                // check if the ICO is cachable?  see config.js
-                if (icoConfig.hasOwnProperty('enableCache') && icoConfig.enableCache)
-                    cache.save(item, tx);
+        }
 
-                analyzeReadyResult(item , tx);
-            });
-        });
+        dom.content('currency_raised' ,`${etherTotal} Ether` );
+        dom.content('tokens_created' ,`${tokenCreated} Tokens` );
 
+        dom.content('agv_investment_currency' ,`${etherTotal/transactionsCount}` );
+        dom.content('agv_investment_tokens' ,`${tokenCreated/transactionsCount}` );
+        dom.content('number_of_investors' ,`${Object.keys(senders).length}` );
+
+        dom.content('ico_ends' ,txDate );
+
+        if(startDate !== null){
+            let duration = __WEBPACK_IMPORTED_MODULE_4_moment___default.a.duration(__WEBPACK_IMPORTED_MODULE_4_moment___default()(txDate).diff(__WEBPACK_IMPORTED_MODULE_4_moment___default()(startDate)));
+
+            dom.content('duration' ,
+                `
+            <b>Y</b>: ${duration.get("years")}  -
+              <b>M</b>: ${duration.get("months")}  -
+              <b>D</b>: ${duration.get("days")}  - 
+              <b>H</b>: ${duration.get("hours")}  -
+              <b>I</b>: ${duration.get("minutes")}  -
+              <b>S</b>: ${duration.get("seconds")}
+            `
+            );
+        }
+
+
+        refreshResults()
+
+        dom.log(`Enjoy the statistics`);
+        dom.loader(false)
     }
 
-    let transactionsCount = 0;// cachedItems.length;
 
     if(cachedItems.length > 0){
         transactionsCount = cachedItems.length;
         dom.transactionsCount(transactionsCount);
-        console.log(cachedItems);
+        //console.log(cachedItems);
         cachedItems.map((item)=>analyzeReadyResult(item.result , item.tx))
     }
 
-    let blockIterator = (from)=> {
+    let blockIterator = (from)=>{
         console.log("Inside Block",from , toBlock);
 
-        if(from-amount > toBlock) {
-            dom.loader(false);
-            return
-        };
-
-        ico.fetch(from, function (error , results) {
+        ico.fetch(from, function (error , results, to) {
+            console.log("Count of results",results.length , `Period: ${from}:${to}`)
             transactionsCount += results.length;
 
             dom.transactionsCount(transactionsCount);
+            if(from > toBlock || to === "latest"){
+                dom.loader(false);
+                console.log(`Finished fetching data from ${__WEBPACK_IMPORTED_MODULE_2__config_js___default.a.host} node`);
+                storageData= storageData.concat(results);
 
-            dom.loader(true,function () {
-                if(results.length > 1){
-                    analyzeResults(results);
+                const sl = storageData.length;
+                dom.log(`Start analysing them ${sl} item ..`);
+                if (sl > 1000 && sl < 5000)
+                    dom.log(`Please wait few seconds...`);
+                else if (sl > 5000 && sl < 100000)
+                    dom.log(`Please wait few minutes...`);
+                else
+                    dom.log(`Please wait, it will take at least 5 minutes ...`);
 
-                    getLastTransaction(results).then(function (data) {
-                        from = from+amount;
+                dom.loader(true,function(){
+                    analyzeResults(storageData);
+                });
+
+                console.log("After storage")
+            }else {
+
+                dom.loader(true, function () {
+                    if (results.length > 1) {
+                        storageData = storageData.concat(results);
+                        dom.log(`Blocks now in memory From: ${from}- To: ${to}`);
+                        from = to;
                         blockIterator(from);
-                    }).catch(function (err) {
-                        console.log("Error" , err  , results)
-                    });
 
-                }else{ 
-                    from += amount;
-                    console.log("Zero Array", from);
+                    } else {
+                        from += __WEBPACK_IMPORTED_MODULE_2__config_js___default.a.skipBlocksOnExceptions;
+                        console.log("Zero Array", from);
+                        blockIterator(from);
+                    }
 
-                    blockIterator(from);
-
-                }
-
-            })
+                });
+            }
         });
     };
 
     blockIterator(fromBlock);
+
 
     dom.csvButtonOnClick(ico);
     dom.chartButtonOnClick(ico);
@@ -67999,6 +68206,17 @@ window.addEventListener('load',  ()=> {
         init( e.target.value);
     });
 
+    __WEBPACK_IMPORTED_MODULE_3_jquery___default()('body').on('change' , '#currency-selector' , (e)=> {
+        currencyPerEther = {name: __WEBPACK_IMPORTED_MODULE_3_jquery___default()('#currency-selector option:selected').text() , value:e.target.value };
+        __WEBPACK_IMPORTED_MODULE_3_jquery___default()('#time').html(new Date());
+        __WEBPACK_IMPORTED_MODULE_3_jquery___default()('#ether_euro').html(currencyPerEther.value);
+
+        __WEBPACK_IMPORTED_MODULE_3_jquery___default()('.currency').each(function(){
+            __WEBPACK_IMPORTED_MODULE_3_jquery___default()(this).html(currencyPerEther.name);
+        });
+
+        refreshResults()
+    });
 
 });
 
@@ -80356,7 +80574,7 @@ module.exports = function(Chart) {
 /* global window: false */
 
 
-var moment = __webpack_require__(1);
+var moment = __webpack_require__(0);
 moment = typeof(moment) === 'function' ? moment : window.moment;
 
 module.exports = function(Chart) {
@@ -82806,7 +83024,7 @@ module.exports = function(regExp, replace){
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/benjamingr/RexExp.escape
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , $re     = __webpack_require__(416)(/[\\^$*+?.()|[\]{}]/g, '\\$&');
 
 $export($export.S, 'RegExp', {escape: function escape(it){ return $re(it); }});
@@ -82817,7 +83035,7 @@ $export($export.S, 'RegExp', {escape: function escape(it){ return $re(it); }});
 /***/ (function(module, exports, __webpack_require__) {
 
 // 22.1.3.3 Array.prototype.copyWithin(target, start, end = this.length)
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 
 $export($export.P, 'Array', {copyWithin: __webpack_require__(166)});
 
@@ -82829,7 +83047,7 @@ __webpack_require__(70)('copyWithin');
 
 "use strict";
 
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , $every  = __webpack_require__(38)(4);
 
 $export($export.P + $export.F * !__webpack_require__(36)([].every, true), 'Array', {
@@ -82844,7 +83062,7 @@ $export($export.P + $export.F * !__webpack_require__(36)([].every, true), 'Array
 /***/ (function(module, exports, __webpack_require__) {
 
 // 22.1.3.6 Array.prototype.fill(value, start = 0, end = this.length)
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 
 $export($export.P, 'Array', {fill: __webpack_require__(118)});
 
@@ -82856,7 +83074,7 @@ __webpack_require__(70)('fill');
 
 "use strict";
 
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , $filter = __webpack_require__(38)(2);
 
 $export($export.P + $export.F * !__webpack_require__(36)([].filter, true), 'Array', {
@@ -82873,7 +83091,7 @@ $export($export.P + $export.F * !__webpack_require__(36)([].filter, true), 'Arra
 "use strict";
 
 // 22.1.3.9 Array.prototype.findIndex(predicate, thisArg = undefined)
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , $find   = __webpack_require__(38)(6)
   , KEY     = 'findIndex'
   , forced  = true;
@@ -82893,7 +83111,7 @@ __webpack_require__(70)(KEY);
 "use strict";
 
 // 22.1.3.8 Array.prototype.find(predicate, thisArg = undefined)
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , $find   = __webpack_require__(38)(5)
   , KEY     = 'find'
   , forced  = true;
@@ -82912,7 +83130,7 @@ __webpack_require__(70)(KEY);
 
 "use strict";
 
-var $export  = __webpack_require__(0)
+var $export  = __webpack_require__(1)
   , $forEach = __webpack_require__(38)(0)
   , STRICT   = __webpack_require__(36)([].forEach, true);
 
@@ -82930,7 +83148,7 @@ $export($export.P + $export.F * !STRICT, 'Array', {
 "use strict";
 
 var ctx            = __webpack_require__(43)
-  , $export        = __webpack_require__(0)
+  , $export        = __webpack_require__(1)
   , toObject       = __webpack_require__(18)
   , call           = __webpack_require__(175)
   , isArrayIter    = __webpack_require__(125)
@@ -82973,7 +83191,7 @@ $export($export.S + $export.F * !__webpack_require__(101)(function(iter){ Array.
 
 "use strict";
 
-var $export       = __webpack_require__(0)
+var $export       = __webpack_require__(1)
   , $indexOf      = __webpack_require__(95)(false)
   , $native       = [].indexOf
   , NEGATIVE_ZERO = !!$native && 1 / [1].indexOf(1, -0) < 0;
@@ -82993,7 +83211,7 @@ $export($export.P + $export.F * (NEGATIVE_ZERO || !__webpack_require__(36)($nati
 /***/ (function(module, exports, __webpack_require__) {
 
 // 22.1.2.2 / 15.4.3.2 Array.isArray(arg)
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 
 $export($export.S, 'Array', {isArray: __webpack_require__(126)});
 
@@ -83004,7 +83222,7 @@ $export($export.S, 'Array', {isArray: __webpack_require__(126)});
 "use strict";
 
 // 22.1.3.13 Array.prototype.join(separator)
-var $export   = __webpack_require__(0)
+var $export   = __webpack_require__(1)
   , toIObject = __webpack_require__(29)
   , arrayJoin = [].join;
 
@@ -83021,7 +83239,7 @@ $export($export.P + $export.F * (__webpack_require__(83) != Object || !__webpack
 
 "use strict";
 
-var $export       = __webpack_require__(0)
+var $export       = __webpack_require__(1)
   , toIObject     = __webpack_require__(29)
   , toInteger     = __webpack_require__(50)
   , toLength      = __webpack_require__(14)
@@ -83049,7 +83267,7 @@ $export($export.P + $export.F * (NEGATIVE_ZERO || !__webpack_require__(36)($nati
 
 "use strict";
 
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , $map    = __webpack_require__(38)(1);
 
 $export($export.P + $export.F * !__webpack_require__(36)([].map, true), 'Array', {
@@ -83065,7 +83283,7 @@ $export($export.P + $export.F * !__webpack_require__(36)([].map, true), 'Array',
 
 "use strict";
 
-var $export        = __webpack_require__(0)
+var $export        = __webpack_require__(1)
   , createProperty = __webpack_require__(119);
 
 // WebKit Array.of isn't generic
@@ -83090,7 +83308,7 @@ $export($export.S + $export.F * __webpack_require__(7)(function(){
 
 "use strict";
 
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , $reduce = __webpack_require__(168);
 
 $export($export.P + $export.F * !__webpack_require__(36)([].reduceRight, true), 'Array', {
@@ -83106,7 +83324,7 @@ $export($export.P + $export.F * !__webpack_require__(36)([].reduceRight, true), 
 
 "use strict";
 
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , $reduce = __webpack_require__(168);
 
 $export($export.P + $export.F * !__webpack_require__(36)([].reduce, true), 'Array', {
@@ -83122,7 +83340,7 @@ $export($export.P + $export.F * !__webpack_require__(36)([].reduce, true), 'Arra
 
 "use strict";
 
-var $export    = __webpack_require__(0)
+var $export    = __webpack_require__(1)
   , html       = __webpack_require__(123)
   , cof        = __webpack_require__(34)
   , toIndex    = __webpack_require__(61)
@@ -83156,7 +83374,7 @@ $export($export.P + $export.F * __webpack_require__(7)(function(){
 
 "use strict";
 
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , $some   = __webpack_require__(38)(3);
 
 $export($export.P + $export.F * !__webpack_require__(36)([].some, true), 'Array', {
@@ -83172,7 +83390,7 @@ $export($export.P + $export.F * !__webpack_require__(36)([].some, true), 'Array'
 
 "use strict";
 
-var $export   = __webpack_require__(0)
+var $export   = __webpack_require__(1)
   , aFunction = __webpack_require__(25)
   , toObject  = __webpack_require__(18)
   , fails     = __webpack_require__(7)
@@ -83206,7 +83424,7 @@ __webpack_require__(60)('Array');
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.3.3.1 / 15.9.4.4 Date.now()
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 
 $export($export.S, 'Date', {now: function(){ return new Date().getTime(); }});
 
@@ -83217,7 +83435,7 @@ $export($export.S, 'Date', {now: function(){ return new Date().getTime(); }});
 "use strict";
 
 // 20.3.4.36 / 15.9.5.43 Date.prototype.toISOString()
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , fails   = __webpack_require__(7)
   , getTime = Date.prototype.getTime;
 
@@ -83250,7 +83468,7 @@ $export($export.P + $export.F * (fails(function(){
 
 "use strict";
 
-var $export     = __webpack_require__(0)
+var $export     = __webpack_require__(1)
   , toObject    = __webpack_require__(18)
   , toPrimitive = __webpack_require__(40);
 
@@ -83294,7 +83512,7 @@ if(new Date(NaN) + '' != INVALID_DATE){
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.2.3.2 / 15.3.4.5 Function.prototype.bind(thisArg, args...)
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 
 $export($export.P, 'Function', {bind: __webpack_require__(169)});
 
@@ -83352,7 +83570,7 @@ NAME in FProto || __webpack_require__(12) && dP(FProto, NAME, {
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.3 Math.acosh(x)
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , log1p   = __webpack_require__(177)
   , sqrt    = Math.sqrt
   , $acosh  = Math.acosh;
@@ -83375,7 +83593,7 @@ $export($export.S + $export.F * !($acosh
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.5 Math.asinh(x)
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , $asinh  = Math.asinh;
 
 function asinh(x){
@@ -83390,7 +83608,7 @@ $export($export.S + $export.F * !($asinh && 1 / $asinh(0) > 0), 'Math', {asinh: 
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.7 Math.atanh(x)
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , $atanh  = Math.atanh;
 
 // Tor Browser bug: Math.atanh(-0) -> 0 
@@ -83405,7 +83623,7 @@ $export($export.S + $export.F * !($atanh && 1 / $atanh(-0) < 0), 'Math', {
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.9 Math.cbrt(x)
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , sign    = __webpack_require__(130);
 
 $export($export.S, 'Math', {
@@ -83419,7 +83637,7 @@ $export($export.S, 'Math', {
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.11 Math.clz32(x)
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 
 $export($export.S, 'Math', {
   clz32: function clz32(x){
@@ -83432,7 +83650,7 @@ $export($export.S, 'Math', {
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.12 Math.cosh(x)
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , exp     = Math.exp;
 
 $export($export.S, 'Math', {
@@ -83446,7 +83664,7 @@ $export($export.S, 'Math', {
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.14 Math.expm1(x)
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , $expm1  = __webpack_require__(129);
 
 $export($export.S + $export.F * ($expm1 != Math.expm1), 'Math', {expm1: $expm1});
@@ -83456,7 +83674,7 @@ $export($export.S + $export.F * ($expm1 != Math.expm1), 'Math', {expm1: $expm1})
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.16 Math.fround(x)
-var $export   = __webpack_require__(0)
+var $export   = __webpack_require__(1)
   , sign      = __webpack_require__(130)
   , pow       = Math.pow
   , EPSILON   = pow(2, -52)
@@ -83487,7 +83705,7 @@ $export($export.S, 'Math', {
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.17 Math.hypot([value1[, value2[, … ]]])
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , abs     = Math.abs;
 
 $export($export.S, 'Math', {
@@ -83517,7 +83735,7 @@ $export($export.S, 'Math', {
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.18 Math.imul(x, y)
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , $imul   = Math.imul;
 
 // some WebKit versions fails with big numbers, some has wrong arity
@@ -83539,7 +83757,7 @@ $export($export.S + $export.F * __webpack_require__(7)(function(){
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.21 Math.log10(x)
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 
 $export($export.S, 'Math', {
   log10: function log10(x){
@@ -83552,7 +83770,7 @@ $export($export.S, 'Math', {
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.20 Math.log1p(x)
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 
 $export($export.S, 'Math', {log1p: __webpack_require__(177)});
 
@@ -83561,7 +83779,7 @@ $export($export.S, 'Math', {log1p: __webpack_require__(177)});
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.22 Math.log2(x)
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 
 $export($export.S, 'Math', {
   log2: function log2(x){
@@ -83574,7 +83792,7 @@ $export($export.S, 'Math', {
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.28 Math.sign(x)
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 
 $export($export.S, 'Math', {sign: __webpack_require__(130)});
 
@@ -83583,7 +83801,7 @@ $export($export.S, 'Math', {sign: __webpack_require__(130)});
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.30 Math.sinh(x)
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , expm1   = __webpack_require__(129)
   , exp     = Math.exp;
 
@@ -83603,7 +83821,7 @@ $export($export.S + $export.F * __webpack_require__(7)(function(){
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.33 Math.tanh(x)
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , expm1   = __webpack_require__(129)
   , exp     = Math.exp;
 
@@ -83620,7 +83838,7 @@ $export($export.S, 'Math', {
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.34 Math.trunc(x)
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 
 $export($export.S, 'Math', {
   trunc: function trunc(it){
@@ -83708,7 +83926,7 @@ if(!$Number(' 0o1') || !$Number('0b1') || $Number('+0x1')){
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.1.2.1 Number.EPSILON
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 
 $export($export.S, 'Number', {EPSILON: Math.pow(2, -52)});
 
@@ -83717,7 +83935,7 @@ $export($export.S, 'Number', {EPSILON: Math.pow(2, -52)});
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.1.2.2 Number.isFinite(number)
-var $export   = __webpack_require__(0)
+var $export   = __webpack_require__(1)
   , _isFinite = __webpack_require__(6).isFinite;
 
 $export($export.S, 'Number', {
@@ -83731,7 +83949,7 @@ $export($export.S, 'Number', {
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.1.2.3 Number.isInteger(number)
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 
 $export($export.S, 'Number', {isInteger: __webpack_require__(174)});
 
@@ -83740,7 +83958,7 @@ $export($export.S, 'Number', {isInteger: __webpack_require__(174)});
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.1.2.4 Number.isNaN(number)
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 
 $export($export.S, 'Number', {
   isNaN: function isNaN(number){
@@ -83753,7 +83971,7 @@ $export($export.S, 'Number', {
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.1.2.5 Number.isSafeInteger(number)
-var $export   = __webpack_require__(0)
+var $export   = __webpack_require__(1)
   , isInteger = __webpack_require__(174)
   , abs       = Math.abs;
 
@@ -83768,7 +83986,7 @@ $export($export.S, 'Number', {
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.1.2.6 Number.MAX_SAFE_INTEGER
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 
 $export($export.S, 'Number', {MAX_SAFE_INTEGER: 0x1fffffffffffff});
 
@@ -83777,7 +83995,7 @@ $export($export.S, 'Number', {MAX_SAFE_INTEGER: 0x1fffffffffffff});
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.1.2.10 Number.MIN_SAFE_INTEGER
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 
 $export($export.S, 'Number', {MIN_SAFE_INTEGER: -0x1fffffffffffff});
 
@@ -83785,7 +84003,7 @@ $export($export.S, 'Number', {MIN_SAFE_INTEGER: -0x1fffffffffffff});
 /* 471 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var $export     = __webpack_require__(0)
+var $export     = __webpack_require__(1)
   , $parseFloat = __webpack_require__(184);
 // 20.1.2.12 Number.parseFloat(string)
 $export($export.S + $export.F * (Number.parseFloat != $parseFloat), 'Number', {parseFloat: $parseFloat});
@@ -83794,7 +84012,7 @@ $export($export.S + $export.F * (Number.parseFloat != $parseFloat), 'Number', {p
 /* 472 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var $export   = __webpack_require__(0)
+var $export   = __webpack_require__(1)
   , $parseInt = __webpack_require__(185);
 // 20.1.2.13 Number.parseInt(string, radix)
 $export($export.S + $export.F * (Number.parseInt != $parseInt), 'Number', {parseInt: $parseInt});
@@ -83805,7 +84023,7 @@ $export($export.S + $export.F * (Number.parseInt != $parseInt), 'Number', {parse
 
 "use strict";
 
-var $export      = __webpack_require__(0)
+var $export      = __webpack_require__(1)
   , toInteger    = __webpack_require__(50)
   , aNumberValue = __webpack_require__(165)
   , repeat       = __webpack_require__(137)
@@ -83924,7 +84142,7 @@ $export($export.P + $export.F * (!!$toFixed && (
 
 "use strict";
 
-var $export      = __webpack_require__(0)
+var $export      = __webpack_require__(1)
   , $fails       = __webpack_require__(7)
   , aNumberValue = __webpack_require__(165)
   , $toPrecision = 1..toPrecision;
@@ -83947,7 +84165,7 @@ $export($export.P + $export.F * ($fails(function(){
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.3.1 Object.assign(target, source)
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 
 $export($export.S + $export.F, 'Object', {assign: __webpack_require__(178)});
 
@@ -83955,7 +84173,7 @@ $export($export.S + $export.F, 'Object', {assign: __webpack_require__(178)});
 /* 476 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
 // 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
 $export($export.S, 'Object', {create: __webpack_require__(56)});
 
@@ -83963,7 +84181,7 @@ $export($export.S, 'Object', {create: __webpack_require__(56)});
 /* 477 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 // 19.1.2.3 / 15.2.3.7 Object.defineProperties(O, Properties)
 $export($export.S + $export.F * !__webpack_require__(12), 'Object', {defineProperties: __webpack_require__(179)});
 
@@ -83971,7 +84189,7 @@ $export($export.S + $export.F * !__webpack_require__(12), 'Object', {definePrope
 /* 478 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 // 19.1.2.4 / 15.2.3.6 Object.defineProperty(O, P, Attributes)
 $export($export.S + $export.F * !__webpack_require__(12), 'Object', {defineProperty: __webpack_require__(13).f});
 
@@ -84070,7 +84288,7 @@ __webpack_require__(39)('isSealed', function($isSealed){
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.3.10 Object.is(value1, value2)
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 $export($export.S, 'Object', {is: __webpack_require__(186)});
 
 /***/ }),
@@ -84120,7 +84338,7 @@ __webpack_require__(39)('seal', function($seal){
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.3.19 Object.setPrototypeOf(O, proto)
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 $export($export.S, 'Object', {setPrototypeOf: __webpack_require__(132).set});
 
 /***/ }),
@@ -84143,7 +84361,7 @@ if(test + '' != '[object z]'){
 /* 492 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var $export     = __webpack_require__(0)
+var $export     = __webpack_require__(1)
   , $parseFloat = __webpack_require__(184);
 // 18.2.4 parseFloat(string)
 $export($export.G + $export.F * (parseFloat != $parseFloat), {parseFloat: $parseFloat});
@@ -84152,7 +84370,7 @@ $export($export.G + $export.F * (parseFloat != $parseFloat), {parseFloat: $parse
 /* 493 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var $export   = __webpack_require__(0)
+var $export   = __webpack_require__(1)
   , $parseInt = __webpack_require__(185);
 // 18.2.5 parseInt(string, radix)
 $export($export.G + $export.F * (parseInt != $parseInt), {parseInt: $parseInt});
@@ -84167,7 +84385,7 @@ var LIBRARY            = __webpack_require__(55)
   , global             = __webpack_require__(6)
   , ctx                = __webpack_require__(43)
   , classof            = __webpack_require__(82)
-  , $export            = __webpack_require__(0)
+  , $export            = __webpack_require__(1)
   , isObject           = __webpack_require__(9)
   , aFunction          = __webpack_require__(25)
   , anInstance         = __webpack_require__(54)
@@ -84467,7 +84685,7 @@ $export($export.S + $export.F * !(USE_NATIVE && __webpack_require__(101)(functio
 /***/ (function(module, exports, __webpack_require__) {
 
 // 26.1.1 Reflect.apply(target, thisArgument, argumentsList)
-var $export   = __webpack_require__(0)
+var $export   = __webpack_require__(1)
   , aFunction = __webpack_require__(25)
   , anObject  = __webpack_require__(3)
   , rApply    = (__webpack_require__(6).Reflect || {}).apply
@@ -84488,7 +84706,7 @@ $export($export.S + $export.F * !__webpack_require__(7)(function(){
 /***/ (function(module, exports, __webpack_require__) {
 
 // 26.1.2 Reflect.construct(target, argumentsList [, newTarget])
-var $export    = __webpack_require__(0)
+var $export    = __webpack_require__(1)
   , create     = __webpack_require__(56)
   , aFunction  = __webpack_require__(25)
   , anObject   = __webpack_require__(3)
@@ -84541,7 +84759,7 @@ $export($export.S + $export.F * (NEW_TARGET_BUG || ARGS_BUG), 'Reflect', {
 
 // 26.1.3 Reflect.defineProperty(target, propertyKey, attributes)
 var dP          = __webpack_require__(13)
-  , $export     = __webpack_require__(0)
+  , $export     = __webpack_require__(1)
   , anObject    = __webpack_require__(3)
   , toPrimitive = __webpack_require__(40);
 
@@ -84567,7 +84785,7 @@ $export($export.S + $export.F * __webpack_require__(7)(function(){
 /***/ (function(module, exports, __webpack_require__) {
 
 // 26.1.4 Reflect.deleteProperty(target, propertyKey)
-var $export  = __webpack_require__(0)
+var $export  = __webpack_require__(1)
   , gOPD     = __webpack_require__(30).f
   , anObject = __webpack_require__(3);
 
@@ -84585,7 +84803,7 @@ $export($export.S, 'Reflect', {
 "use strict";
 
 // 26.1.5 Reflect.enumerate(target)
-var $export  = __webpack_require__(0)
+var $export  = __webpack_require__(1)
   , anObject = __webpack_require__(3);
 var Enumerate = function(iterated){
   this._t = anObject(iterated); // target
@@ -84616,7 +84834,7 @@ $export($export.S, 'Reflect', {
 
 // 26.1.7 Reflect.getOwnPropertyDescriptor(target, propertyKey)
 var gOPD     = __webpack_require__(30)
-  , $export  = __webpack_require__(0)
+  , $export  = __webpack_require__(1)
   , anObject = __webpack_require__(3);
 
 $export($export.S, 'Reflect', {
@@ -84630,7 +84848,7 @@ $export($export.S, 'Reflect', {
 /***/ (function(module, exports, __webpack_require__) {
 
 // 26.1.8 Reflect.getPrototypeOf(target)
-var $export  = __webpack_require__(0)
+var $export  = __webpack_require__(1)
   , getProto = __webpack_require__(31)
   , anObject = __webpack_require__(3);
 
@@ -84648,7 +84866,7 @@ $export($export.S, 'Reflect', {
 var gOPD           = __webpack_require__(30)
   , getPrototypeOf = __webpack_require__(31)
   , has            = __webpack_require__(24)
-  , $export        = __webpack_require__(0)
+  , $export        = __webpack_require__(1)
   , isObject       = __webpack_require__(9)
   , anObject       = __webpack_require__(3);
 
@@ -84671,7 +84889,7 @@ $export($export.S, 'Reflect', {get: get});
 /***/ (function(module, exports, __webpack_require__) {
 
 // 26.1.9 Reflect.has(target, propertyKey)
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 
 $export($export.S, 'Reflect', {
   has: function has(target, propertyKey){
@@ -84684,7 +84902,7 @@ $export($export.S, 'Reflect', {
 /***/ (function(module, exports, __webpack_require__) {
 
 // 26.1.10 Reflect.isExtensible(target)
-var $export       = __webpack_require__(0)
+var $export       = __webpack_require__(1)
   , anObject      = __webpack_require__(3)
   , $isExtensible = Object.isExtensible;
 
@@ -84700,7 +84918,7 @@ $export($export.S, 'Reflect', {
 /***/ (function(module, exports, __webpack_require__) {
 
 // 26.1.11 Reflect.ownKeys(target)
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 
 $export($export.S, 'Reflect', {ownKeys: __webpack_require__(183)});
 
@@ -84709,7 +84927,7 @@ $export($export.S, 'Reflect', {ownKeys: __webpack_require__(183)});
 /***/ (function(module, exports, __webpack_require__) {
 
 // 26.1.12 Reflect.preventExtensions(target)
-var $export            = __webpack_require__(0)
+var $export            = __webpack_require__(1)
   , anObject           = __webpack_require__(3)
   , $preventExtensions = Object.preventExtensions;
 
@@ -84730,7 +84948,7 @@ $export($export.S, 'Reflect', {
 /***/ (function(module, exports, __webpack_require__) {
 
 // 26.1.14 Reflect.setPrototypeOf(target, proto)
-var $export  = __webpack_require__(0)
+var $export  = __webpack_require__(1)
   , setProto = __webpack_require__(132);
 
 if(setProto)$export($export.S, 'Reflect', {
@@ -84754,7 +84972,7 @@ var dP             = __webpack_require__(13)
   , gOPD           = __webpack_require__(30)
   , getPrototypeOf = __webpack_require__(31)
   , has            = __webpack_require__(24)
-  , $export        = __webpack_require__(0)
+  , $export        = __webpack_require__(1)
   , createDesc     = __webpack_require__(49)
   , anObject       = __webpack_require__(3)
   , isObject       = __webpack_require__(9);
@@ -85040,7 +85258,7 @@ __webpack_require__(28)('bold', function(createHTML){
 
 "use strict";
 
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , $at     = __webpack_require__(135)(false);
 $export($export.P, 'String', {
   // 21.1.3.3 String.prototype.codePointAt(pos)
@@ -85056,7 +85274,7 @@ $export($export.P, 'String', {
 "use strict";
 // 21.1.3.6 String.prototype.endsWith(searchString [, endPosition])
 
-var $export   = __webpack_require__(0)
+var $export   = __webpack_require__(1)
   , toLength  = __webpack_require__(14)
   , context   = __webpack_require__(136)
   , ENDS_WITH = 'endsWith'
@@ -85118,7 +85336,7 @@ __webpack_require__(28)('fontsize', function(createHTML){
 /* 524 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var $export        = __webpack_require__(0)
+var $export        = __webpack_require__(1)
   , toIndex        = __webpack_require__(61)
   , fromCharCode   = String.fromCharCode
   , $fromCodePoint = String.fromCodePoint;
@@ -85149,7 +85367,7 @@ $export($export.S + $export.F * (!!$fromCodePoint && $fromCodePoint.length != 1)
 "use strict";
 // 21.1.3.7 String.prototype.includes(searchString, position = 0)
 
-var $export  = __webpack_require__(0)
+var $export  = __webpack_require__(1)
   , context  = __webpack_require__(136)
   , INCLUDES = 'includes';
 
@@ -85213,7 +85431,7 @@ __webpack_require__(28)('link', function(createHTML){
 /* 529 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var $export   = __webpack_require__(0)
+var $export   = __webpack_require__(1)
   , toIObject = __webpack_require__(29)
   , toLength  = __webpack_require__(14);
 
@@ -85236,7 +85454,7 @@ $export($export.S, 'String', {
 /* 530 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 
 $export($export.P, 'String', {
   // 21.1.3.13 String.prototype.repeat(count)
@@ -85263,7 +85481,7 @@ __webpack_require__(28)('small', function(createHTML){
 "use strict";
 // 21.1.3.18 String.prototype.startsWith(searchString [, position ])
 
-var $export     = __webpack_require__(0)
+var $export     = __webpack_require__(1)
   , toLength    = __webpack_require__(14)
   , context     = __webpack_require__(136)
   , STARTS_WITH = 'startsWith'
@@ -85342,7 +85560,7 @@ __webpack_require__(74)('trim', function($trim){
 var global         = __webpack_require__(6)
   , has            = __webpack_require__(24)
   , DESCRIPTORS    = __webpack_require__(12)
-  , $export        = __webpack_require__(0)
+  , $export        = __webpack_require__(1)
   , redefine       = __webpack_require__(27)
   , META           = __webpack_require__(48).KEY
   , $fails         = __webpack_require__(7)
@@ -85579,7 +85797,7 @@ setToStringTag(global.JSON, 'JSON', true);
 
 "use strict";
 
-var $export      = __webpack_require__(0)
+var $export      = __webpack_require__(1)
   , $typed       = __webpack_require__(105)
   , buffer       = __webpack_require__(140)
   , anObject     = __webpack_require__(3)
@@ -85629,7 +85847,7 @@ __webpack_require__(60)(ARRAY_BUFFER);
 /* 539 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 $export($export.G + $export.W + $export.F * !__webpack_require__(105).ABV, {
   DataView: __webpack_require__(140).DataView
 });
@@ -85749,7 +85967,7 @@ __webpack_require__(96)('WeakSet', function(get){
 "use strict";
 
 // https://github.com/tc39/Array.prototype.includes
-var $export   = __webpack_require__(0)
+var $export   = __webpack_require__(1)
   , $includes = __webpack_require__(95)(true);
 
 $export($export.P, 'Array', {
@@ -85765,7 +85983,7 @@ __webpack_require__(70)('includes');
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/rwaldron/tc39-notes/blob/master/es6/2014-09/sept-25.md#510-globalasap-for-enqueuing-a-microtask
-var $export   = __webpack_require__(0)
+var $export   = __webpack_require__(1)
   , microtask = __webpack_require__(131)()
   , process   = __webpack_require__(6).process
   , isNode    = __webpack_require__(34)(process) == 'process';
@@ -85782,7 +86000,7 @@ $export($export.G, {
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/ljharb/proposal-is-error
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , cof     = __webpack_require__(34);
 
 $export($export.S, 'Error', {
@@ -85796,7 +86014,7 @@ $export($export.S, 'Error', {
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/DavidBruant/Map-Set.prototype.toJSON
-var $export  = __webpack_require__(0);
+var $export  = __webpack_require__(1);
 
 $export($export.P + $export.R, 'Map', {toJSON: __webpack_require__(171)('Map')});
 
@@ -85805,7 +86023,7 @@ $export($export.P + $export.R, 'Map', {toJSON: __webpack_require__(171)('Map')})
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://gist.github.com/BrendanEich/4294d5c212a6d2254703
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 
 $export($export.S, 'Math', {
   iaddh: function iaddh(x0, x1, y0, y1){
@@ -85821,7 +86039,7 @@ $export($export.S, 'Math', {
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://gist.github.com/BrendanEich/4294d5c212a6d2254703
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 
 $export($export.S, 'Math', {
   imulh: function imulh(u, v){
@@ -85842,7 +86060,7 @@ $export($export.S, 'Math', {
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://gist.github.com/BrendanEich/4294d5c212a6d2254703
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 
 $export($export.S, 'Math', {
   isubh: function isubh(x0, x1, y0, y1){
@@ -85858,7 +86076,7 @@ $export($export.S, 'Math', {
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://gist.github.com/BrendanEich/4294d5c212a6d2254703
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 
 $export($export.S, 'Math', {
   umulh: function umulh(u, v){
@@ -85880,7 +86098,7 @@ $export($export.S, 'Math', {
 
 "use strict";
 
-var $export         = __webpack_require__(0)
+var $export         = __webpack_require__(1)
   , toObject        = __webpack_require__(18)
   , aFunction       = __webpack_require__(25)
   , $defineProperty = __webpack_require__(13);
@@ -85898,7 +86116,7 @@ __webpack_require__(12) && $export($export.P + __webpack_require__(102), 'Object
 
 "use strict";
 
-var $export         = __webpack_require__(0)
+var $export         = __webpack_require__(1)
   , toObject        = __webpack_require__(18)
   , aFunction       = __webpack_require__(25)
   , $defineProperty = __webpack_require__(13);
@@ -85915,7 +86133,7 @@ __webpack_require__(12) && $export($export.P + __webpack_require__(102), 'Object
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/tc39/proposal-object-values-entries
-var $export  = __webpack_require__(0)
+var $export  = __webpack_require__(1)
   , $entries = __webpack_require__(182)(true);
 
 $export($export.S, 'Object', {
@@ -85929,7 +86147,7 @@ $export($export.S, 'Object', {
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/tc39/proposal-object-getownpropertydescriptors
-var $export        = __webpack_require__(0)
+var $export        = __webpack_require__(1)
   , ownKeys        = __webpack_require__(183)
   , toIObject      = __webpack_require__(29)
   , gOPD           = __webpack_require__(30)
@@ -85954,7 +86172,7 @@ $export($export.S, 'Object', {
 
 "use strict";
 
-var $export                  = __webpack_require__(0)
+var $export                  = __webpack_require__(1)
   , toObject                 = __webpack_require__(18)
   , toPrimitive              = __webpack_require__(40)
   , getPrototypeOf           = __webpack_require__(31)
@@ -85978,7 +86196,7 @@ __webpack_require__(12) && $export($export.P + __webpack_require__(102), 'Object
 
 "use strict";
 
-var $export                  = __webpack_require__(0)
+var $export                  = __webpack_require__(1)
   , toObject                 = __webpack_require__(18)
   , toPrimitive              = __webpack_require__(40)
   , getPrototypeOf           = __webpack_require__(31)
@@ -86001,7 +86219,7 @@ __webpack_require__(12) && $export($export.P + __webpack_require__(102), 'Object
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/tc39/proposal-object-values-entries
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , $values = __webpack_require__(182)(false);
 
 $export($export.S, 'Object', {
@@ -86017,7 +86235,7 @@ $export($export.S, 'Object', {
 "use strict";
 
 // https://github.com/zenparsing/es-observable
-var $export     = __webpack_require__(0)
+var $export     = __webpack_require__(1)
   , global      = __webpack_require__(6)
   , core        = __webpack_require__(42)
   , microtask   = __webpack_require__(131)()
@@ -86381,7 +86599,7 @@ metadata.exp({metadata: function metadata(metadataKey, metadataValue){
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/DavidBruant/Map-Set.prototype.toJSON
-var $export  = __webpack_require__(0);
+var $export  = __webpack_require__(1);
 
 $export($export.P + $export.R, 'Set', {toJSON: __webpack_require__(171)('Set')});
 
@@ -86392,7 +86610,7 @@ $export($export.P + $export.R, 'Set', {toJSON: __webpack_require__(171)('Set')})
 "use strict";
 
 // https://github.com/mathiasbynens/String.prototype.at
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , $at     = __webpack_require__(135)(true);
 
 $export($export.P, 'String', {
@@ -86408,7 +86626,7 @@ $export($export.P, 'String', {
 "use strict";
 
 // https://tc39.github.io/String.prototype.matchAll/
-var $export     = __webpack_require__(0)
+var $export     = __webpack_require__(1)
   , defined     = __webpack_require__(35)
   , toLength    = __webpack_require__(14)
   , isRegExp    = __webpack_require__(100)
@@ -86444,7 +86662,7 @@ $export($export.P, 'String', {
 "use strict";
 
 // https://github.com/tc39/proposal-string-pad-start-end
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , $pad    = __webpack_require__(187);
 
 $export($export.P, 'String', {
@@ -86460,7 +86678,7 @@ $export($export.P, 'String', {
 "use strict";
 
 // https://github.com/tc39/proposal-string-pad-start-end
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , $pad    = __webpack_require__(187);
 
 $export($export.P, 'String', {
@@ -86512,7 +86730,7 @@ __webpack_require__(141)('observable');
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/ljharb/proposal-global
-var $export = __webpack_require__(0);
+var $export = __webpack_require__(1);
 
 $export($export.S, 'System', {global: __webpack_require__(6)});
 
@@ -86547,7 +86765,7 @@ for(var collections = ['NodeList', 'DOMTokenList', 'MediaList', 'StyleSheetList'
 /* 586 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var $export = __webpack_require__(0)
+var $export = __webpack_require__(1)
   , $task   = __webpack_require__(139);
 $export($export.G + $export.B, {
   setImmediate:   $task.set,
@@ -86560,7 +86778,7 @@ $export($export.G + $export.B, {
 
 // ie9- setTimeout & setInterval additional parameters fix
 var global     = __webpack_require__(6)
-  , $export    = __webpack_require__(0)
+  , $export    = __webpack_require__(1)
   , invoke     = __webpack_require__(99)
   , partial    = __webpack_require__(414)
   , navigator  = global.navigator
@@ -90048,7 +90266,7 @@ exports = module.exports = __webpack_require__(615)();
 
 
 // module
-exports.push([module.i, ".uil-pie-css {\n  width: 200px;\n  height: 200px;\n  z-index: 99999999;\n  transform: scale(0.95);\n  position: fixed;\n  background: none;\n  border-radius: 50%;\n  top: 40%;\n  left: 40%;\n  display: none;\n}\n\n@-webkit-keyframes uil-pie-rotate {\n  0% {\n    -ms-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n  }\n  100% {\n    -ms-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n  }\n}\n@-webkit-keyframes uil-pie-rotate {\n  0% {\n    -ms-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n  }\n  100% {\n    -ms-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n  }\n}\n@-moz-keyframes uil-pie-rotate {\n  0% {\n    -ms-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n  }\n  100% {\n    -ms-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n  }\n}\n@-ms-keyframes uil-pie-rotate {\n  0% {\n    -ms-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n  }\n  100% {\n    -ms-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n  }\n}\n@-moz-keyframes uil-pie-rotate {\n  0% {\n    -ms-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n  }\n  100% {\n    -ms-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n  }\n}\n@-webkit-keyframes uil-pie-rotate {\n  0% {\n    -ms-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n  }\n  100% {\n    -ms-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n  }\n}\n@-o-keyframes uil-pie-rotate {\n  0% {\n    -ms-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n  }\n  100% {\n    -ms-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n  }\n}\n@keyframes uil-pie-rotate {\n  0% {\n    -ms-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n  }\n  100% {\n    -ms-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n  }\n}\n.uil-pie-css > div {\n  position: absolute;\n  width: 100px;\n  height: 100px;\n  border-radius: 100% 0 0 0;\n  background: #000;\n  opacity: 0.5;\n}\n.uil-pie-css > div:nth-child(1) {\n  background: #920;\n  -ms-animation: uil-pie-rotate 1.25s linear infinite;\n  -moz-animation: uil-pie-rotate 1.25s linear infinite;\n  -webkit-animation: uil-pie-rotate 1.25s linear infinite;\n  -o-animation: uil-pie-rotate 1.25s linear infinite;\n  animation: uil-pie-rotate 1.25s linear infinite;\n}\n.uil-pie-css > div:nth-child(2) {\n  background: #f90;\n  -ms-animation: uil-pie-rotate 1.6666666666666667s linear infinite;\n  -moz-animation: uil-pie-rotate 1.6666666666666667s linear infinite;\n  -webkit-animation: uil-pie-rotate 1.6666666666666667s linear infinite;\n  -o-animation: uil-pie-rotate 1.6666666666666667s linear infinite;\n  animation: uil-pie-rotate 1.6666666666666667s linear infinite;\n}\n.uil-pie-css > div:nth-child(3) {\n  background: #2f4;\n  -ms-animation: uil-pie-rotate 2.5s linear infinite;\n  -moz-animation: uil-pie-rotate 2.5s linear infinite;\n  -webkit-animation: uil-pie-rotate 2.5s linear infinite;\n  -o-animation: uil-pie-rotate 2.5s linear infinite;\n  animation: uil-pie-rotate 2.5s linear infinite;\n}\n.uil-pie-css > div:nth-child(4) {\n  background: #029;\n  -ms-animation: uil-pie-rotate 5s linear infinite;\n  -moz-animation: uil-pie-rotate 5s linear infinite;\n  -webkit-animation: uil-pie-rotate 5s linear infinite;\n  -o-animation: uil-pie-rotate 5s linear infinite;\n  animation: uil-pie-rotate 5s linear infinite;\n}\n\ncanvas{\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  -ms-user-select: none;\n}\n\n.data-content{\n  height:400px;\n  overflow: auto;\n}\nul {\n  list-style-type: none;\n  margin: 0;\n  padding: 0;\n  padding-bottom: 2px;\n  overflow: hidden;\n  background-color: #333333;\n  position: relative;\n}\n\nli {\n  float: left;\n  display: block;\n  color: white;\n  text-align: center;\n  padding: 16px;\n  text-decoration: none;\n  height: 45px;\n}\n\nul:hover {\n  background-color: #111111;\n}\nli:first-child{\n  position: absolute;\n  top:20px;\n  font-size: 8px;\n  color: #4CAF50;\n}\nli:last-child{\n  float: right !important;\n}\n\n.charts{\n  display: none;\n}", ""]);
+exports.push([module.i, ".uil-pie-css {\n  width: 200px;\n  height: 200px;\n  z-index: 99999999;\n  transform: scale(0.95);\n  position: fixed;\n  background: none;\n  border-radius: 50%;\n  top: 40%;\n  left: 40%;\n  display: none;\n}\n\n@-webkit-keyframes uil-pie-rotate {\n  0% {\n    -ms-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n  }\n  100% {\n    -ms-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n  }\n}\n@-webkit-keyframes uil-pie-rotate {\n  0% {\n    -ms-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n  }\n  100% {\n    -ms-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n  }\n}\n@-moz-keyframes uil-pie-rotate {\n  0% {\n    -ms-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n  }\n  100% {\n    -ms-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n  }\n}\n@-ms-keyframes uil-pie-rotate {\n  0% {\n    -ms-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n  }\n  100% {\n    -ms-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n  }\n}\n@-moz-keyframes uil-pie-rotate {\n  0% {\n    -ms-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n  }\n  100% {\n    -ms-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n  }\n}\n@-webkit-keyframes uil-pie-rotate {\n  0% {\n    -ms-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n  }\n  100% {\n    -ms-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n  }\n}\n@-o-keyframes uil-pie-rotate {\n  0% {\n    -ms-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n  }\n  100% {\n    -ms-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n  }\n}\n@keyframes uil-pie-rotate {\n  0% {\n    -ms-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(0deg) translate(-50px, -50px);\n  }\n  100% {\n    -ms-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -moz-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -webkit-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    -o-transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n    transform: translate(50px, 50px) rotate(360deg) translate(-50px, -50px);\n  }\n}\n.uil-pie-css > div {\n  position: absolute;\n  width: 100px;\n  height: 100px;\n  border-radius: 100% 0 0 0;\n  background: #000;\n  opacity: 0.5;\n}\n.uil-pie-css > div:nth-child(1) {\n  background: #920;\n  -ms-animation: uil-pie-rotate 1.25s linear infinite;\n  -moz-animation: uil-pie-rotate 1.25s linear infinite;\n  -webkit-animation: uil-pie-rotate 1.25s linear infinite;\n  -o-animation: uil-pie-rotate 1.25s linear infinite;\n  animation: uil-pie-rotate 1.25s linear infinite;\n}\n.uil-pie-css > div:nth-child(2) {\n  background: #f90;\n  -ms-animation: uil-pie-rotate 1.6666666666666667s linear infinite;\n  -moz-animation: uil-pie-rotate 1.6666666666666667s linear infinite;\n  -webkit-animation: uil-pie-rotate 1.6666666666666667s linear infinite;\n  -o-animation: uil-pie-rotate 1.6666666666666667s linear infinite;\n  animation: uil-pie-rotate 1.6666666666666667s linear infinite;\n}\n.uil-pie-css > div:nth-child(3) {\n  background: #2f4;\n  -ms-animation: uil-pie-rotate 2.5s linear infinite;\n  -moz-animation: uil-pie-rotate 2.5s linear infinite;\n  -webkit-animation: uil-pie-rotate 2.5s linear infinite;\n  -o-animation: uil-pie-rotate 2.5s linear infinite;\n  animation: uil-pie-rotate 2.5s linear infinite;\n}\n.uil-pie-css > div:nth-child(4) {\n  background: #029;\n  -ms-animation: uil-pie-rotate 5s linear infinite;\n  -moz-animation: uil-pie-rotate 5s linear infinite;\n  -webkit-animation: uil-pie-rotate 5s linear infinite;\n  -o-animation: uil-pie-rotate 5s linear infinite;\n  animation: uil-pie-rotate 5s linear infinite;\n}\n\ncanvas{\n  -moz-user-select: none;\n  -webkit-user-select: none;\n  -ms-user-select: none;\n}\n\n.data-content{\n  height:400px;\n  overflow: auto;\n}\n.data-content ul {\n  list-style-type: none;\n  margin: 0;\n  padding: 0;\n  padding-bottom: 2px;\n  overflow: hidden;\n  background-color: #333333;\n  position: relative;\n}\n\n.data-content ul li {\n  float: left;\n  display: block;\n  color: white;\n  text-align: center;\n  padding: 16px;\n  text-decoration: none;\n  height: 45px;\n}\n\n.data-content ul:hover {\n  background-color: #111111;\n}\n.data-content ul li:first-child{\n  position: absolute;\n  top:20px;\n  font-size: 8px;\n  color: #4CAF50;\n}\n.data-content ul li:last-child{\n  float: right !important;\n}\n\n.charts{\n  display: none;\n}\n.currency{\n  color: darkred;\n}\nh3{\n  font-weight: normal;\n  color: rgba(0, 0, 0, 0.72);\n}\nth{\n  font-weight: normal;\n  color: green;\n}", ""]);
 
 // exports
 
