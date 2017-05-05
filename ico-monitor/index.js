@@ -27795,12 +27795,28 @@ module.exports ={
             fromBlock:1429008,
             toBlock:3564002,
             etherFactor:1000
+        },
+        HumaniqToken:{
+            address:'0x9734c136F5c63531b60D02548Bca73a3d72E024D',
+            abi:[{"constant":false,"inputs":[{"name":"newAddress","type":"address"}],"name":"changeEmissionContractAddress","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"value","type":"bool"}],"name":"lock","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"emissionContractAddress","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_for","type":"address"},{"name":"tokenCount","type":"uint256"}],"name":"issueTokens","outputs":[{"name":"","type":"bool"}],"payable":true,"type":"function"},{"constant":true,"inputs":[],"name":"founder","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"payable":false,"type":"function"},{"inputs":[{"name":"_founder","type":"address"}],"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Approval","type":"event"}],
+            event:'Transfer',
+            args:{
+                tokens:'value',
+                sender:'to'
+            },
+            enableCache:false,
+            fromBlock:2809028,
+            toBlock:3563636,
+            etherFactor:1000,
+            decimal:0,
         }
     },
     host:'https://mainnet.infura.io/My9Aw8U1yEqmchLYRKXK',
-//    host:'http://localhost:8545',
+    // host:'https://mainnet.infura.io/33uWXyqdb2ZEons5VtEm',
+    // host:'http://localhost:8545',
+    // host:'http://localhost:8545',
     skipBlocks:100000,
-    skipBlocksOnExceptions:10000,
+    skipBlocksOnExceptions:1000,
     defaultDecimal:18,
     defaultEtherFactor:1000,
     supportedCurrencies:['BTC','EUR','USD']
@@ -65792,7 +65808,8 @@ class ChartManager{
          * @todo
          * Enhance the performance much better
          */
-        console.log(chartData);
+        console.log(chartData)
+
         let chartDataArray = [];
         let keys = [];
         Object.keys(chartData).map(function(key, index) {
@@ -65891,12 +65908,18 @@ class Dom{
         });
     }
 
-    chartButtonOnClick(ico){
+    chartButtonOnClick(ico ){
+
         let chart = new ChartManager();
-        __WEBPACK_IMPORTED_MODULE_1_jquery___default()('#charts').click(function() {
+        __WEBPACK_IMPORTED_MODULE_1_jquery___default()('#charts').click(()=>{
+            let type = this.getFilterTypeValue();
             __WEBPACK_IMPORTED_MODULE_1_jquery___default()('.charts').toggle();
-            chart.draw(ico.chartData);
+            console.log(type , ico.chartData);
+            chart.draw(ico.chartData[type]);
         });
+    }
+    getFilterTypeValue(){
+        return __WEBPACK_IMPORTED_MODULE_1_jquery___default()('#time_filter option:selected').val();
     }
     content(id , text = null){
         return text?__WEBPACK_IMPORTED_MODULE_1_jquery___default()(`#${id}`).html(text): __WEBPACK_IMPORTED_MODULE_1_jquery___default()(`#${id}`).html();
@@ -65909,7 +65932,7 @@ class Dom{
     log(text){
         let date = new Date().toTimeString();
         let ico = __WEBPACK_IMPORTED_MODULE_1_jquery___default()('#smart-contract').val()
-        console.log(`${date} ${ico} ${text}`);
+
         return __WEBPACK_IMPORTED_MODULE_1_jquery___default()('#status').prepend( `${date} ${ico} ${text}\n`);
     }
 }
@@ -65951,7 +65974,9 @@ class ICO{
         this.blockNumbers = this.current.lastBlockNumber;
         this.csvContent = "data:text/csv;charset=utf-8,";
         this.csvContent += ["Transaction Maker", "Value in Eth", "Number of token"].join(",") + "\n";
-        this.chartData = {};
+        this.chartData = {
+            d:{},h : {},m:{}
+        };
 
     }
     getBlockNumbers(){
@@ -65965,7 +65990,6 @@ class ICO{
         let amount = __WEBPACK_IMPORTED_MODULE_1__config_js___default.a.skipBlocks;
         let configToBlock = this.currentIco.toBlock;
 
-//        let event = eval(`this.smartContract.${this.currentIco.event}`)(customArgs,{fromBlock:from, toBlock: from+amount,topics: ["LogTake"]} );
         if(typeof from === "string") {
             return;
         };
@@ -65973,15 +65997,10 @@ class ICO{
         let toBlock = configToBlock-from < 100000?'latest':from+amount;
 
         let event = this.smartContract[this.currentIco.event](customArgs,{fromBlock:from, toBlock: toBlock} );
-//        let event = this.web3.eth.filter({fromBlock:0, toBlock: 'latest', address: this.address});
 
         event.get((error, results) => {
-
-            if (error && results.length === 0) {
-                console.log("ERROR", error);
-                callback(error , null, null);
-                return;
-            }
+            if (error || results === undefined) 
+                return callback(error , null, null);
             callback(null, results , toBlock);
         });
 
@@ -67821,18 +67840,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-const ProviderEngine = __webpack_require__(340)
-const CacheSubprovider = __webpack_require__(341)
-const FixtureSubprovider = __webpack_require__(343)
-const FilterSubprovider = __webpack_require__(342)
-const VmSubprovider = __webpack_require__(347)
-const HookedWalletSubprovider = __webpack_require__(344)
-const NonceSubprovider = __webpack_require__(345)
-const RpcSubprovider = __webpack_require__(346)
+const ProviderEngine = __webpack_require__(340);
+const CacheSubprovider = __webpack_require__(341);
+const FixtureSubprovider = __webpack_require__(343);
+const FilterSubprovider = __webpack_require__(342);
+const VmSubprovider = __webpack_require__(347);
+const HookedWalletSubprovider = __webpack_require__(344);
+const NonceSubprovider = __webpack_require__(345);
+const RpcSubprovider = __webpack_require__(346);
 
-
-let engine = new ProviderEngine();
-let web3 = new __WEBPACK_IMPORTED_MODULE_1_web3___default.a(engine);
 
 let currencyPerEther= {};
 
@@ -67853,6 +67869,10 @@ __WEBPACK_IMPORTED_MODULE_3_jquery___default.a.ajax({
 
     }
 });
+
+let engine = new ProviderEngine();
+let web3 = new __WEBPACK_IMPORTED_MODULE_1_web3___default.a(engine);
+
 
 // static results
 engine.addProvider(new FixtureSubprovider({
@@ -67885,17 +67905,17 @@ engine.addProvider(new HookedWalletSubprovider({
 
 // data source
 engine.addProvider(new RpcSubprovider({
-    rpcUrl: `${__WEBPACK_IMPORTED_MODULE_2__config_js___default.a.host}`,
+    rpcUrl:`${__WEBPACK_IMPORTED_MODULE_2__config_js___default.a.host}`,
 }));
 
 engine.start();
 
 // log new blocks
-engine.on('block', function(block){
-    console.log('================================');
-    console.log('BLOCK CHANGED:', '#'+block.number.toString('hex'), '0x'+block.hash.toString('hex'));
-    console.log('================================');
-});
+// engine.on('block', function(block){
+//     console.log('================================');
+//     console.log('BLOCK CHANGED:', '#'+block.number.toString('hex'), '0x'+block.hash.toString('hex'));
+//     console.log('================================');
+// });
 
 const providers = __WEBPACK_IMPORTED_MODULE_2__config_js___default.a.icos;
 
@@ -67903,12 +67923,14 @@ const makePromise = (func) => (...args) => new Promise((resolve, fail) =>
     func(...args, (error, result) => error ? fail(error) : resolve(result))
 );
 
-const memoize = func => {
-    const data = __WEBPACK_IMPORTED_MODULE_7__CacheAdapter_js__["a" /* default */].getBlock()
-    let map = data?data:{};
-    return (...args) =>
-        map[args] === undefined ? (map[args] = func(...args)) : map[args];
-};
+// const memoize = func => {
+//     const data = CacheAdapter.getBlock()
+//     let map = data?data:{};
+//     return (...args) =>
+//         map[args] === undefined ? (map[args] = func(...args)) : map[args];
+//     map[item.blockNumber] = txDate;
+//     localStorage.setItem(`blockTimes-${blockNumber}`, date);
+// };
 
 /**
  * for statistcs
@@ -67925,26 +67947,27 @@ let numberInvestorsBetween5to100kEruo= 0;
 let numberInvestorsLessThan500K= 0;
 let numberInvestorsWhoInvestedMoreThanOnce= 0;
 
-let maxInvestments= 0;
-let minInvestments= 99999999;
+let maxInvestmentsMoney= 0;
+let maxInvestmentsTokens= 0;
+let minInvestments= 999999999999;
 /** end statiscs variables*/
 
 let dom = new __WEBPACK_IMPORTED_MODULE_6__DOM_js__["a" /* default */]();
 
 function refreshResults(){
 
-    maxInvestments= 0;
+    maxInvestmentsMoney= 0;
+    maxInvestmentsTokens= 0;
     minInvestments= 99999999;
     numberInvestorsMoreThanOne100kEuro = 0;
     numberInvestorsBetween5to100kEruo= 0;
     numberInvestorsLessThan500K= 0;
     numberInvestorsWhoInvestedMoreThanOnce= 0;
 
-    dom.content('currency_raised_euro' ,`${etherTotal*currencyPerEther.value} ${currencyPerEther.name}` );
-
+    dom.content('currency_raised_euro' ,`${formatNumber(etherTotal*currencyPerEther.value)} ${currencyPerEther.name}` );
+    console.log('\n start calculatin');
     for (let [key, value] of Object.entries(senders)) {
         let currencyValue = value['ethers']*currencyPerEther.value;
-
         if(currencyValue > 100000)
             numberInvestorsMoreThanOne100kEuro+=1;
         if(currencyValue > 5000 && currencyValue <100000)
@@ -67954,24 +67977,31 @@ function refreshResults(){
         if(value['times'] > 1)
             numberInvestorsWhoInvestedMoreThanOnce +=1;
 
-        if(currencyValue > maxInvestments)
-            maxInvestments = `${currencyValue} ${currencyPerEther.name}  / ${value['ethers']} Ether`;
+        if(currencyValue > maxInvestmentsMoney){
+            maxInvestmentsMoney = currencyValue;
+            maxInvestmentsTokens = value['tokens']
+        }
 
         if(value['ethers'] < minInvestments)
             minInvestments=value['ethers'];
     }
 
-
-
-    dom.content('investors_gk100' ,`${numberInvestorsMoreThanOne100kEuro}` );
-    dom.content('investors_5100k' ,`${numberInvestorsBetween5to100kEruo}` );
-    dom.content('investors_l5k' ,`${numberInvestorsLessThan500K}` );
-    dom.content('investors_more_once' ,`${numberInvestorsWhoInvestedMoreThanOnce}` );
-    dom.content('max_investment' ,`${maxInvestments}` );
-    dom.content('min_investment' ,`${minInvestments}` );
+    dom.content('investors_gk100' ,`${formatNumber(numberInvestorsMoreThanOne100kEuro)}` );
+    dom.content('investors_5100k' ,`${formatNumber(numberInvestorsBetween5to100kEruo)}` );
+    dom.content('investors_l5k' ,`${formatNumber(numberInvestorsLessThan500K)}` );
+    dom.content('investors_more_once' ,`${formatNumber(numberInvestorsWhoInvestedMoreThanOnce)}` );
+    dom.content('max_investment' ,`${formatNumber(maxInvestmentsMoney)} ${currencyPerEther.name}  / ${formatNumber(maxInvestmentsTokens)} Token` );
+    dom.content('min_investment' ,`${formatNumber(minInvestments)}` );
 
 }
 
+function formatNumber(number){
+    if (number === undefined || !number || typeof number !== "number")
+        return number;
+    return number.toFixed(2).replace(/./g, function(c, i, a) {
+        return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+    });
+}
 
 /**
  * @init
@@ -68027,18 +68057,7 @@ function init(ICONAME){
     let toBlock = icoConfig.hasOwnProperty('toBlock')?icoConfig['toBlock']:999999;
 
     async function analyzeReadyResult(item){
-        let fastBlockTime = memoize(blockTime);
-        let txDate = await fastBlockTime(item.blockNumber);
-
-        let dates = __WEBPACK_IMPORTED_MODULE_7__CacheAdapter_js__["a" /* default */].getBlock() //JSON.parse(localStorage.getItem('blockTimes'));
-        dates[item.blockNumber] = txDate;
-        localStorage.setItem('blockTimes',JSON.stringify(dates));
-
-        if(typeof txDate === "string")
-            txDate = new Date(txDate);
-
-
-//        console.log(`Analyzing ${item.blockNumber}`);
+        let txDate = await blockTime(item.blockNumber);
 
         let result = ico.toJson(item);
         console.log(`Analyzing ${item.blockNumber}`);
@@ -68066,13 +68085,24 @@ function init(ICONAME){
         etherTotal += parseFloat(etherValue);
         tokenCreated += parseFloat(tokenNumbers);
 
-
         // get date with format d/m/y to be the uniqe key for the charts
-        let currentDate = (txDate.getDate() + '/' + (txDate.getMonth() + 1) + '/' + txDate.getFullYear());
-        if (typeof ico.chartData[currentDate] === "undefined") {
-            ico.chartData[currentDate] = 0;
-        }
-        ico.chartData[currentDate] += 1;
+        let currentDatePerMinutes = `${txDate.getDate()}/${txDate.getMonth() + 1}/${txDate.getFullYear()}  ${txDate.getHours()}:${txDate.getMinutes()}`;
+        let currentDatePerHours= `${txDate.getDate()}/${txDate.getMonth() + 1}/${txDate.getFullYear()}:${txDate.getHours()}}`;
+
+        let currentDate = `${txDate.getDate()}/${txDate.getMonth() + 1}/${txDate.getFullYear()}`;
+
+        if (typeof ico.chartData['d'][currentDate] === "undefined")
+            ico.chartData['d'][currentDate] = 0;
+        ico.chartData['d'][currentDate] += 1;
+
+        if (typeof ico.chartData['h'][currentDatePerHours] === "undefined")
+            ico.chartData['h'][currentDatePerHours] = 0;
+        ico.chartData['h'][currentDatePerHours] += 1;
+
+        if (typeof ico.chartData['m'][currentDatePerMinutes] === "undefined")
+            ico.chartData['m'][currentDatePerMinutes] = 0;
+        ico.chartData['m'][currentDatePerMinutes] += 1;
+
 
         /*
          * @Statistics: date for ico starts
@@ -68086,9 +68116,16 @@ function init(ICONAME){
     }
 
     async function blockTime(blockNumber) {
-        let result = await makePromise(web3.eth.getBlock)(blockNumber);
+        let cacheKey = `blockTimes-${blockNumber}`;
+        let cached = localStorage.getItem(cacheKey);
+        if(cached) {
+            return new Date(cached * 1000);
+        }
+
         console.log(`Caching this timestamp form block number blockNumber ${blockNumber}`);
         dom.log(`Fetching ${blockNumber} timestamp`);
+        let result = await makePromise(web3.eth.getBlock)(blockNumber, false);
+        localStorage.setItem(cacheKey, result.timestamp);
         return new Date(result.timestamp * 1000);
     }
 
@@ -68102,12 +68139,14 @@ function init(ICONAME){
 
         }
 
-        dom.content('currency_raised' ,`${etherTotal} Ether` );
-        dom.content('tokens_created' ,`${tokenCreated} Tokens` );
 
-        dom.content('agv_investment_currency' ,`${etherTotal/transactionsCount}` );
-        dom.content('agv_investment_tokens' ,`${tokenCreated/transactionsCount}` );
-        dom.content('number_of_investors' ,`${Object.keys(senders).length}` );
+        
+        dom.content('currency_raised' ,`${formatNumber(etherTotal)} Ether` );
+        dom.content('tokens_created' ,`${formatNumber(tokenCreated)} Tokens` );
+
+        dom.content('agv_investment_currency' ,`${formatNumber(etherTotal/transactionsCount)}` );
+        dom.content('agv_investment_tokens' ,`${formatNumber(tokenCreated/transactionsCount)}` );
+        dom.content('number_of_investors' ,`${formatNumber(Object.keys(senders).length)}` );
 
         dom.content('ico_ends' ,txDate );
 
@@ -68145,7 +68184,12 @@ function init(ICONAME){
         console.log("Inside Block",from , toBlock);
 
         ico.fetch(from, function (error , results, to) {
-            console.log("Count of results",results.length , `Period: ${from}:${to}`)
+            if ( error ){
+                console.log(error );
+                console.log(`Try again`);
+                return blockIterator(from);
+            }
+            console.log("Count of results",results.length , `Period: ${from}:${to}`);
             transactionsCount += results.length;
 
             dom.transactionsCount(transactionsCount);
@@ -68175,14 +68219,11 @@ function init(ICONAME){
                         storageData = storageData.concat(results);
                         dom.log(`Blocks now in memory From: ${from}- To: ${to}`);
                         from = to;
-                        blockIterator(from);
-
                     } else {
                         from += __WEBPACK_IMPORTED_MODULE_2__config_js___default.a.skipBlocksOnExceptions;
                         console.log("Zero Array", from);
-                        blockIterator(from);
                     }
-
+                    blockIterator(from);
                 });
             }
         });
@@ -68190,8 +68231,8 @@ function init(ICONAME){
 
     blockIterator(fromBlock);
 
-
     dom.csvButtonOnClick(ico);
+
     dom.chartButtonOnClick(ico);
 
 };
