@@ -27739,7 +27739,7 @@ module.exports ={
             },
             enableCache:false,
             fromBlock:2607800,
-            toBlock:3517758 ,
+            toBlock:3607800,
             etherFactor:1000
         } ,
         MelonPort:{
@@ -27811,12 +27811,11 @@ module.exports ={
             decimal:0,
         }
     },
-    host:'https://mainnet.infura.io/My9Aw8U1yEqmchLYRKXK',
-    // host:'https://mainnet.infura.io/33uWXyqdb2ZEons5VtEm',
+    // host:'https://mainnet.infura.io/My9Aw8U1yEqmchLYRKXK',
+    host:'https://mainnet.infura.io/33uWXyqdb2ZEons5VtEm',
     // host:'http://localhost:8545',
-    // host:'http://localhost:8545',
-    skipBlocks:100000,
-    skipBlocksOnExceptions:1000,
+    skipBlocks:1000000,
+    skipBlocksOnExceptions:10000,
     defaultDecimal:18,
     defaultEtherFactor:1000,
     supportedCurrencies:['BTC','EUR','USD']
@@ -65957,13 +65956,12 @@ class Dom{
 const providers = __WEBPACK_IMPORTED_MODULE_1__config_js___default.a.icos;
 
 
-
 //let tx = await makePromise(web3.eth.getTransaction)('latest');
 
 
-class ICO{
+class ICO {
 
-    constructor(web3,address,  name , abi){
+    constructor(web3, address, name, abi) {
         this.name = name;
         this.web3 = web3;
         this.address = address;
@@ -65975,61 +65973,65 @@ class ICO{
         this.csvContent = "data:text/csv;charset=utf-8,";
         this.csvContent += ["Transaction Maker", "Value in Eth", "Number of token"].join(",") + "\n";
         this.chartData = {
-            d:{},h : {},m:{}
+            d: {}, h: {}, m: {}
         };
 
     }
-    getBlockNumbers(){
+
+    getBlockNumbers() {
         return this.blockNumbers;
     }
-    getTransaction(results){
+
+    getTransaction(results) {
 
     }
-    fetch(from  ,callback){
-        const customArgs = this.currentIco.hasOwnProperty('customArgs')?this.currentIco.customArgs:{};
+
+    fetch(from, callback) {
+        const customArgs = this.currentIco.hasOwnProperty('customArgs') ? this.currentIco.customArgs : {};
         let amount = __WEBPACK_IMPORTED_MODULE_1__config_js___default.a.skipBlocks;
         let configToBlock = this.currentIco.toBlock;
 
-        if(typeof from === "string") {
+        if (typeof from === "string") {
             return;
-        };
+        }
 
-        let toBlock = configToBlock-from < 100000?'latest':from+amount;
 
-        let event = this.smartContract[this.currentIco.event](customArgs,{fromBlock:from, toBlock: toBlock} );
+        let toBlock = configToBlock - from < 100000 ? 'latest' : from + amount;
+        console.log(customArgs);
+        let event = this.smartContract[this.currentIco.event](customArgs, {fromBlock: from, toBlock: toBlock});
 
         event.get((error, results) => {
-            if (error || results === undefined) 
-                return callback(error , null, null);
-            callback(null, results , toBlock);
+            if (error || results === undefined)
+                return callback(error, null, null);
+            callback(null, results, toBlock);
         });
 
     }
 
-    generateCSV(){
+    generateCSV() {
         let encodedUri = encodeURI(this.csvContent);
         window.open(encodedUri);
     }
 
-    appendToCSV(...items){
+    appendToCSV(...items) {
         this.csvContent += items.join(",") + "\n";
     }
 
-    toJson(block , tx = null){
+    toJson(block, tx = null) {
         let d = {};
         d['result'] = {
-            args:block.args,
-            address:block.address,
-            transactionHash:block.transactionHash
+            args: block.args,
+            address: block.address,
+            transactionHash: block.transactionHash
         };
 
-        if(tx){
-            d['tx']= {
+        if (tx) {
+            d['tx'] = {
                 from: tx.from,
-                    gas:tx.gas,
-                    blockNumber:tx.blockNumber,
-                    to:tx.to,
-                    value:tx.value
+                gas: tx.gas,
+                blockNumber: tx.blockNumber,
+                to: tx.to,
+                value: tx.value
             }
         }
         return d;
@@ -67855,7 +67857,7 @@ let currencyPerEther= {};
 __WEBPACK_IMPORTED_MODULE_3_jquery___default.a.ajax({
     url: 'https://api.coinbase.com/v2/exchange-rates?currency=ETH',
     success: function(result){
-        console.log(result.data)
+        console.log(result.data);
         __WEBPACK_IMPORTED_MODULE_2__config_js___default.a.supportedCurrencies.map(function (currency) {
             __WEBPACK_IMPORTED_MODULE_3_jquery___default()('#currency-selector').append(`<option value="${result.data.rates[currency]}">${currency}</option>`);
         });
@@ -67933,7 +67935,7 @@ const makePromise = (func) => (...args) => new Promise((resolve, fail) =>
 // };
 
 /**
- * for statistcs
+ * for statistics
  *
  */
 let startDate = null;
@@ -67950,7 +67952,7 @@ let numberInvestorsWhoInvestedMoreThanOnce= 0;
 let maxInvestmentsMoney= 0;
 let maxInvestmentsTokens= 0;
 let minInvestments= 999999999999;
-/** end statiscs variables*/
+/** end statistics variables*/
 
 let dom = new __WEBPACK_IMPORTED_MODULE_6__DOM_js__["a" /* default */]();
 
@@ -68043,7 +68045,7 @@ function init(ICONAME){
     senders = {};
     transactionsCount = 0;// cachedItems.length;
 
-    /** end statiscs variables*/
+    /** end statistica variables*/
 
     let cachedData = cache.get();
     let cachedItems = cachedData['data'];
@@ -68057,6 +68059,7 @@ function init(ICONAME){
     let toBlock = icoConfig.hasOwnProperty('toBlock')?icoConfig['toBlock']:999999;
 
     async function analyzeReadyResult(item){
+        // console.log(item)
         let txDate = await blockTime(item.blockNumber);
 
         let result = ico.toJson(item);
@@ -68131,6 +68134,7 @@ function init(ICONAME){
 
 
     async function analyzeResults(results) {
+        console.log("Result is ",results)
         let txDate = null;
         for ( let i = 0,j=results.length-1; i < results.length/2 ; i++ , j--){
             let item = results[i];
@@ -68184,6 +68188,7 @@ function init(ICONAME){
         console.log("Inside Block",from , toBlock);
 
         ico.fetch(from, function (error , results, to) {
+            console.log(results);
             if ( error ){
                 console.log(error );
                 console.log(`Try again`);

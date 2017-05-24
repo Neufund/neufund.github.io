@@ -86,7 +86,7 @@ module.exports ={
             },
             enableCache:false,
             fromBlock:2607800,
-            toBlock:3517758 ,
+            toBlock:3607800,
             etherFactor:1000
         } ,
         MelonPort:{
@@ -158,12 +158,11 @@ module.exports ={
             decimal:0,
         }
     },
-    host:'https://mainnet.infura.io/My9Aw8U1yEqmchLYRKXK',
-    // host:'https://mainnet.infura.io/33uWXyqdb2ZEons5VtEm',
+    // host:'https://mainnet.infura.io/My9Aw8U1yEqmchLYRKXK',
+    host:'https://mainnet.infura.io/33uWXyqdb2ZEons5VtEm',
     // host:'http://localhost:8545',
-    // host:'http://localhost:8545',
-    skipBlocks:100000,
-    skipBlocksOnExceptions:1000,
+    skipBlocks:1000000,
+    skipBlocksOnExceptions:10000,
     defaultDecimal:18,
     defaultEtherFactor:1000,
     supportedCurrencies:['BTC','EUR','USD']
