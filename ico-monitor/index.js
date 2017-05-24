@@ -27812,8 +27812,8 @@ module.exports ={
         }
     },
     // host:'https://mainnet.infura.io/My9Aw8U1yEqmchLYRKXK',
-    host:'https://mainnet.infura.io/33uWXyqdb2ZEons5VtEm',
-    // host:'http://localhost:8545',
+    // host:'https://mainnet.infura.io/33uWXyqdb2ZEons5VtEm',
+    host:'https://neufund.org/nodes/ropsten/',
     skipBlocks:1000000,
     skipBlocksOnExceptions:10000,
     defaultDecimal:18,
